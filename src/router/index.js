@@ -26,6 +26,31 @@ const routes = [
         component: HomePage,
         meta: { requiresAuth: true }
     },
+    /*{
+        path: "/security",
+        name: "security",
+        component: () => import("@/views/Security.vue"),
+    },
+    {
+        path: "/profile",
+        name: "profile",
+        component: () => import("@/views/Profile.vue"),
+    },
+    {
+        path: "/address",
+        name: "address",
+        component: () => import("@/views/Address.vue"),
+    },*/
+    {
+        path: '/user',
+        name: 'User',
+        component: () => import('@/views/user/UserMessage.vue'),
+    },
+    {
+        path: '/user-edit',
+        name: 'EditUser',
+        component: () => import('@/views/user/UserEdit.vue'),
+    },
     {
       path: '/goods',
       name: 'Goods',
@@ -47,6 +72,7 @@ const routes = [
         component: () => import('@/views/seller_sys/Products/SearchEditDeletePage.vue'),
     },
 ];
+
 
 const router = new Router({
     mode: 'history',

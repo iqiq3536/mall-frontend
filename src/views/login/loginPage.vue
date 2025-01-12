@@ -53,9 +53,9 @@ export default {
       })
           .then(response => {
             if (response.data.success) {
-              this.$router.push({ name: 'ImgPage' });
+              this.$router.push({ name: 'User', params: { userName: this.loginForm.username } });
             } else {
-              this.$message.error('登录失败：' + response.data.message);
+              this.$message.error('登录失败：' + response.data.message);// response.data.user.user_id
             }
           })
           .catch(error => {
