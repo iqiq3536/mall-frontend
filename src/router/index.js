@@ -40,6 +40,12 @@ const routes = [
     },
     {
 
+        path: "/sellerLogin",
+        name: "sellerLogin",
+        component: () => import("@/views/admin/sellerControl.vue"),
+    },
+    {
+
         path: "/adminControl",
         name: "adminControl",
         component: () => import("@/views/admin/adminControl.vue"),
