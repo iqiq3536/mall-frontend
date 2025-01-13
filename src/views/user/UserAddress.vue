@@ -17,16 +17,47 @@
 
     <!-- 右侧内容区域 -->
     <main class="content">
-      <router-view />
+      <div v-if="activeItem === 'address'" class="password-change-form">
+        <form @submit.prevent="addressChange">
+      <table class="address-table">
+        <thead>
+        <tr>
+          <th>地址ID</th>
+          <th>省</th>
+          <th>市</th>
+          <th>区（县）</th>
+          <th>详细地址</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="(address, index) in userAddresses" :key="index">
+          <td>{{ address.address_id }}</td>
+          <td>{{ address.province }}</td>
+          <td>{{ address.city }}</td>
+          <td>{{ address.district }}</td>
+          <td>{{ address.detail }}</td>
+          <td>
+            <button @click="modifyAddress(address)">修改</button>
+            <button @click="deleteAddress(address)">删除</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+      <button @click="addAddress">新增地址</button>
+        </form>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
+//import axios from "axios";
+
 export default {
   data() {
     return {
-
+      activeItem: 'profile', // 假设这是从父组件传递来的
       navItems: [
         { key: "EditUser", label: "安全管理" },
         { key: "profile", label: "个人资料" },
@@ -52,7 +83,10 @@ export default {
       this.activeItem = key;
       this.$router.push({ name: key }); // 根据路由名称跳转
     },
-  },
+    addressChange(){
+
+    }
+  }
 };
 </script>
 
@@ -105,5 +139,20 @@ export default {
 .content {
   flex: 1;
   padding: 20px;
+}
+.address-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.address-table th, .address-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+button {
+  padding: 5px 10px;
+  margin: 5px;
 }
 </style>

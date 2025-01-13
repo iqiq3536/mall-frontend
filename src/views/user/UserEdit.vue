@@ -118,6 +118,7 @@ export default {
         user_id: this.$route.params.user_id
       })
           .then(response => {
+            this.user.user_id = response.data.user_id;
             this.user.username = response.data.username; // 更新username属性
             this.user.gender = response.data.gender;
             this.user.contact_info = response.data.contact_info;
@@ -136,7 +137,15 @@ export default {
     },
     handlePasswordChange() {
       const {currentPassword, newPassword, confirmPassword} = this.passwordForm;
-
+// 验证当前密码是否为空
+      if (!currentPassword) {
+        this.errorMessage = "请输入当前密码！";
+        return;
+      }
+      if (currentPassword !== this.user.password) {
+        this.errorMessage = "密码不正确，请重新输入";
+        return;
+      }
       // 验证新密码和确认密码是否一致
       if (newPassword !== confirmPassword) {
         this.errorMessage = "新密码和确认新密码不一致，请重新输入";
@@ -145,21 +154,45 @@ export default {
 
       // 调用后端接口的位置
       this.errorMessage = ""; // 清空错误消息
+      const userPayload = {
+        username: this.user.username,
+        user_id:this.user.user_id,
+        full_name:this.user.full_name,
+        gender:this.user.gender,
+        contact_info:this.user.contact_info,
+        family_id:this.user.family_id,
+        family_name:this.user.family_name,
+        password: newPassword, // 将新密码更新到用户信息中
+      };
       console.log("调用后端接口修改密码", {
         currentPassword,
         newPassword,
       });
 
-      // 示例：模拟请求后端
-      setTimeout(() => {
-        alert("密码修改成功！");
-        // 清空表单
-        this.passwordForm.currentPassword = "";
-        this.passwordForm.newPassword = "";
-        this.passwordForm.confirmPassword = "";
-      }, 1000);
-    },
-  },
+
+        // 调用后端接口
+        axios.post("http://localhost:8081/api/user/updateUserById", userPayload)
+      .then(response => {
+          const data = response.data;
+        if ( data === true) {
+          // 修改成功
+          alert("密码修改成功！");
+          // 清空表单
+          this.passwordForm.currentPassword = "";
+          this.passwordForm.newPassword = "";
+          this.passwordForm.confirmPassword = "";
+        } else {
+          // 修改失败
+          this.errorMessage = "密码修改失败，请重试！";
+        }
+      })
+             .catch (error=> {
+        // 后端返回异常或请求失败
+        console.error("请求失败：", error);
+        this.errorMessage = "请求失败，请稍后重试！";
+      });
+    }
+  }
 };
 </script>
 

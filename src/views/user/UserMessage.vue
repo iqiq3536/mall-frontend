@@ -1,9 +1,11 @@
 <template>
+  <div>
+    <NavigationBar></NavigationBar>
   <div class="user-profile">
     <div class="user-info">
       <div class="user-name">{{ user.username}}</div>
 
-      <router-link :to="{ path: '/user-edit', query: { user_id: user.user_id } }" class="edit-profile-btn">编辑资料</router-link>
+      <router-link :to="{ name: 'profile', params: { user_id: user.user_id } }" class="edit-profile-btn">编辑资料</router-link>
     </div>
     <div class="order-buttons">
       <router-link v-for="(order, index) in orders" :key="index" :to="`/orders/${order.label.toLowerCase()}`" class="order-button">
@@ -12,12 +14,14 @@
       </router-link>
     </div>
   </div>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-
+import NavigationBar from "@/components/NavigationBar.vue";
 export default {
+  components: {NavigationBar},
   data() {
     return {
 
