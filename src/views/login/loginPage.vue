@@ -32,7 +32,28 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
-      }
+      },
+      user: {
+        /*    private int user_id;
+    private String username;
+    private String password;
+    private String full_name;
+    private String gender;
+    private String contact_info;
+    private int family_id;
+    private String family_name;
+*/
+        username: '',
+        password: '',
+        user_id:'',
+        full_name:'',
+        gender:'',
+        contact_info:'',
+        family_id:'',
+        family_name:''
+
+
+      } // 初始化 user 对象为空
     };
   },
   methods: {
@@ -53,7 +74,7 @@ export default {
       })
           .then(response => {
             if (response.data.success) {
-              this.$router.push({ name: 'User', params: { userName: this.loginForm.username } });
+              this.$router.push({ name: 'User', params: { user_id: response.data.user_id} });
             } else {
               this.$message.error('登录失败：' + response.data.message);// response.data.user.user_id
             }
