@@ -32,21 +32,17 @@ const routes = [
         component: HomePage,
         meta: { requiresAuth: true }
     },
-    /*{
-        path: "/security",
-        name: "security",
-        component: () => import("@/views/Security.vue"),
-    },
     {
+
         path: "/profile",
         name: "profile",
-        component: () => import("@/views/Profile.vue"),
+        component: () => import("@/views/user/UserProfile.vue"),
     },
     {
         path: "/address",
         name: "address",
-        component: () => import("@/views/Address.vue"),
-    },*/
+        component: () => import("@/views/user/UserAddress.vue"),
+    },
     {
         path: '/user',
         name: 'User',
