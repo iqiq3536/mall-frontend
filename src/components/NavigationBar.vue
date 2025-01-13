@@ -14,6 +14,7 @@
           <ul class="dropdown">
             <li><router-link to="/user/profile" class="dropdown-link">个人信息</router-link></li>
             <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
+            <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
           </ul>
         </li>
       </ul>
