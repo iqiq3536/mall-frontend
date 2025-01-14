@@ -5,7 +5,7 @@
     <div class="user-info">
       <div class="user-name">{{ user.username}}</div>
 
-      <router-link :to="{ name: 'profile', params: { user_id: user.user_id } }" class="edit-profile-btn">编辑资料</router-link>
+      <button @click="editProfile(user.user_id)" class="edit-profile-btn">编辑资料</button>
     </div>
     <div class="order-buttons">
       <router-link v-for="(order, index) in orders" :key="index" :to="`/orders/${order.label.toLowerCase()}`" class="order-button">
@@ -70,6 +70,7 @@ export default {
            .then(response => {
             this.user.username = response.data.username; // 更新username属性
              this.user.gender = response.data.gender;
+             this.user.user_id = response.data.user_id;
              this.user.contact_info = response.data.contact_info;
              this.user.family_id = response.data.family_id;
              this.user.family_name = response.data.family_name;
@@ -78,6 +79,9 @@ export default {
           .catch(error => {
             console.error('请求失败：', error);
           });
+    },
+    editProfile(user_id) {
+      this.$router.push({ name: 'profile', params: { user_id: user_id } });
     }
   }
 };
