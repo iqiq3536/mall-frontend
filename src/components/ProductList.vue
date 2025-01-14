@@ -62,7 +62,7 @@ export default {
 
         // 提取需要的字段
         const newItems = response.data.map(item => ({
-          id: item.id,
+
           name: item.name,
           price: item.price,
           img_url: 'https://img2.baidu.com/it/u=1225084252,536866490&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1309',
