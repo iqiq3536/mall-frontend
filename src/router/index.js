@@ -4,6 +4,7 @@ import Router from 'vue-router';
 import LoginPage from '@/views/login/loginPage.vue';
 import HomePage from '@/views/home/homePage.vue'
 import MallHomePage from "@/views/home/MallHomePage.vue";
+import ProductDetail from "@/components/ProductDetail.vue";
 // import LoginPage2 from '@/views/login/loginPage2.vue';
 
 Vue.use(Router);
@@ -13,6 +14,11 @@ const routes = [
         path: '/home',
         name: 'MallHomePage',
         component: MallHomePage,
+    },
+    {
+        path: "/product/:id", // 商品详情页，动态参数 `id`
+        name: "ProductDetail",
+        component: ProductDetail,
     },
     //登录页面
     {

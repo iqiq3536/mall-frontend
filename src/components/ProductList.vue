@@ -3,13 +3,14 @@
     <!-- 商品列表 -->
     <el-row :gutter="20">
       <el-col :span="6" v-for="item in items" :key="item.id">
-        <el-card shadow="hover">
+        <el-card shadow="hover" @click.native="goToProductDetail(item.id)">
           <el-image
               :src="item.img_url"
               alt="商品图片"
               style="width: 100%; height: 200px; object-fit: cover"
           />
           <div style="margin-top: 10px; text-align: center;">
+            <p>ID:{{item.id}}</p>
             <p>{{ item.name }}</p>
             <p style="color: red; font-weight: bold;">¥{{ item.price }}</p>
             <el-button type="primary" size="small">加入购物车</el-button>
@@ -47,6 +48,10 @@ export default {
     window.removeEventListener("scroll", this.handleScroll); // 移除滚动事件监听
   },
   methods: {
+    goToProductDetail(id) {
+
+      this.$router.push({ name: "ProductDetail", params: { id } });
+    },
     async loadMore() {
       if (this.loading || !this.hasMore) return;
 

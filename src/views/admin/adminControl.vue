@@ -97,7 +97,7 @@ export default {
         contact_info: user.contact_info,
         // ... 其他需要更新的字段
       })
-          .then(response => {
+          .then(() => {
             // 更新成功后可能需要刷新用户列表或显示成功消息
             this.fetchUsers(); // 示例：重新获取用户列表以更新显示
           })
@@ -108,7 +108,7 @@ export default {
     // 删除用户的方法
     deleteUser(user) {
       axios.delete(`/api/users/${user.user_id}`) // 替换为实际的删除用户接口 URL
-          .then(response => {
+          .then(() => {
             // 从用户列表中移除已删除的用户
             this.users = this.users.filter(u => u.user_id !== user.user_id);
             // 显示成功消息（可选）
