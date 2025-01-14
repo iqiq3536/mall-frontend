@@ -88,14 +88,24 @@ const routes = [
       component: () => import('@/views/seller_sys/Products/imgPage.vue'),
     },
     {
-        path: '/2',
+        path: '/ProductAdd',
         name: 'ImgOut',
         component: () => import('@/views/seller_sys/Products/AddPage.vue'),
     },
     {
-        path: '/3',
+        path: '/ProductEdit',
         name: 'TestList',
         component: () => import('@/views/seller_sys/Products/SearchEditDeletePage.vue'),
+    },
+    {
+        path: '/ProductTest',
+        name: 'Test2',
+        component: () => import('@/views/seller_sys/Products/testPage.vue')
+    },
+    {
+        path: '/ProductTagEdit',
+        name: 'Test3',
+        component: () => import('@/views/seller_sys/Products/EditTag.vue')
     },
 ];
 
