@@ -18,7 +18,11 @@ export default {
     return {
       product: {
         name: '',
-        img_url: '' // 存储上传后图片的URL
+        img_url: '' ,
+        description: '',
+        category:'',
+        price:'',
+        stock:'',
       },
       selectedFile: null, // 存储用户选择的文件
       previewImage: null, // 存储预览图片的URL
