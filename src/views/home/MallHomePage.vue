@@ -5,6 +5,7 @@
     <NavigationBar></NavigationBar>
     <SearchBar></SearchBar>
     <ProductList></ProductList>
+    <LoginPrompt></LoginPrompt>
   </div>
 </template>
 
@@ -12,12 +13,14 @@
 import NavigationBar from '@/components/NavigationBar.vue'
 import SearchBar from "@/components/SearchBar.vue";
 import ProductList from "@/components/ProductList.vue";
+import LoginPrompt from "@/components/LoginPrompt.vue";
 export default {
   name:'App',
   components:{
     NavigationBar,
     SearchBar,
-    ProductList
+    ProductList,
+    LoginPrompt
   }
 
 }
