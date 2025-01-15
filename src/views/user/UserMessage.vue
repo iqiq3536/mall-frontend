@@ -5,7 +5,7 @@
     <div class="user-info">
       <div class="user-name">{{ user.username}}</div>
 
-      <button @click="editProfile(user.user_id)" class="edit-profile-btn">编辑资料</button>
+      <button @click="editProfile" class="edit-profile-btn">编辑资料</button>
     </div>
     <div class="order-buttons">
       <router-link v-for="(order, index) in orders" :key="index" :to="`/orders/${order.label.toLowerCase()}`" class="order-button">
@@ -71,28 +71,28 @@ export default {
   methods: {
     //test() {
     //  axios.get('http://localhost:8081/api/123', {withCredentials:true})
-    },
+
     getUserInfo() {
-    //console.log('未找7889777777777777数');
-      axios.get('http://localhost:8081/api/user/findUserById', {withCredentials:true})
-           .then(response => {
+      //console.log('未找7889777777777777数');
+      axios.get('http://localhost:8081/api/user/findUserById', {withCredentials: true})
+          .then(response => {
             this.user.username = response.data.username; // 更新username属性
-             this.user.gender = response.data.gender;
-             this.user.user_id = response.data.user_id;
-             this.user.contact_info = response.data.contact_info;
-             this.user.family_id = response.data.family_id;
-             this.user.family_name = response.data.family_name;
-             this.user.contact_info = response.data.contact_info;
+            this.user.gender = response.data.gender;
+            this.user.user_id = response.data.user_id;
+            this.user.contact_info = response.data.contact_info;
+            this.user.family_id = response.data.family_id;
+            this.user.family_name = response.data.family_name;
+            this.user.contact_info = response.data.contact_info;
           })
           .catch(error => {
             console.error('请求失败：', error);
           });
     },
-    // editProfile(user_id) {
-    //   this.$router.push({ name: 'profile', params: { user_id: user_id } });
-    // }
+    editProfile() {
+      this.$router.push({name: 'profile'});
+    }
   }
-};
+}
 </script>
 
 <style>
