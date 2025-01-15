@@ -12,7 +12,7 @@
           <div style="margin-top: 10px; text-align: center;">
             <p>{{ item.name }}</p>
             <p style="color: red; font-weight: bold;">¥{{ item.price }}</p>
-            <el-button type="primary" size="small">加入购物车</el-button>
+            <el-button type="primary" size="small">购买</el-button>
           </div>
         </el-card>
       </el-col>
