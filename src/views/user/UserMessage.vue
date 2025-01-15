@@ -20,6 +20,7 @@
 <script>
 import axios from "axios";
 import NavigationBar from "@/components/NavigationBar.vue";
+//import Cookies from 'js-cookie';
 export default {
   components: {NavigationBar},
   data() {
@@ -56,17 +57,24 @@ export default {
     };
   },
   created() {
-    if (this.$route.params.user_id) {
-      this.getUserInfo(this.$route.params.user_id);
+    this.getUserInfo();
+    //this.test();
+    //console.error('未er_id参数');
+    /*if (this.$route.params.user_id) {
+
+      //this.getUserInfo(this.$route.params.user_id);
+      /*this.getUserInfo(Cookies.get('user_id'));
     } else {
       console.error('未找到user_id参数');
-    }
+    }*/
   },
   methods: {
+    //test() {
+    //  axios.get('http://localhost:8081/api/123', {withCredentials:true})
+    },
     getUserInfo() {
-      axios.post('http://localhost:8081/api/user/findUserById', {
-        user_id: this.$route.params.user_id
-      })
+    //console.log('未找7889777777777777数');
+      axios.get('http://localhost:8081/api/user/findUserById', {withCredentials:true})
            .then(response => {
             this.user.username = response.data.username; // 更新username属性
              this.user.gender = response.data.gender;
@@ -80,9 +88,9 @@ export default {
             console.error('请求失败：', error);
           });
     },
-    editProfile(user_id) {
-      this.$router.push({ name: 'profile', params: { user_id: user_id } });
-    }
+    // editProfile(user_id) {
+    //   this.$router.push({ name: 'profile', params: { user_id: user_id } });
+    // }
   }
 };
 </script>
