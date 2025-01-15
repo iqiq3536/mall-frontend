@@ -10,7 +10,6 @@
               style="width: 100%; height: 200px; object-fit: cover"
           />
           <div style="margin-top: 10px; text-align: center;">
-            <p>ID:{{item.id}}</p>
             <p>{{ item.name }}</p>
             <p style="color: red; font-weight: bold;">¥{{ item.price }}</p>
             <el-button type="primary" size="small">加入购物车</el-button>
@@ -62,7 +61,7 @@ export default {
 
         // 提取需要的字段
         const newItems = response.data.map(item => ({
-
+          id:item.id,
           name: item.name,
           price: item.price,
           img_url: 'https://img2.baidu.com/it/u=1225084252,536866490&fm=253&fmt=auto&app=138&f=JPEG?w=800&h=1309',

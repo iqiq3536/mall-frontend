@@ -10,8 +10,8 @@ import ProductDetail from "@/components/ProductDetail.vue";
 Vue.use(Router);
 
 const routes = [
-    {
-        path: '/home',
+    {//首页
+        path: '/mallhome',
         name: 'MallHomePage',
         component: MallHomePage,
     },
