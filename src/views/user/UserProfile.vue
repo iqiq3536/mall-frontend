@@ -5,7 +5,7 @@
       <h2 class="sidebar-title">账户管理</h2>
       <ul class="nav-list">
         <li>个人资料</li>
-        <li  @click="edit_skip(user.user_id)">收货地址</li>
+        <li  @click="edit_skip()">收货地址</li>
       </ul>
     </aside>
 
@@ -76,21 +76,21 @@ export default {
     };
   },
   created() {
-    if (this.$route.params.user_id) {
+    this.fetchUserData();
+    /*if (this.$route.params.user_id) {
       this.fetchUserData(this.$route.params.user_id);
     } else {
       console.error('未找到user_id参数');
-    }
+    }*/
   },
   methods: {
-    edit_skip(user_id) {
-      this.$router.push({ name: 'address', params: { user_id: user_id } });
+    edit_skip() {
+      this.$router.push({ name: 'address'});
     },
      fetchUserData() {
 
-       axios.post('http://localhost:8081/api/user/findUserById', {
-         user_id: this.$route.params.user_id
-       })
+       axios.get('http://localhost:8081/api/user/findUserById',
+       {withCredentials: true})
            .then(response => {
              this.user.username = response.data.username; // 更新username属性
              this.user.gender = response.data.gender;

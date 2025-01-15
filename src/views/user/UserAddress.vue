@@ -4,7 +4,7 @@
     <aside class="sidebar">
       <h2 class="sidebar-title">账户管理</h2>
       <ul class="nav-list">
-        <li @click="edit_skip(user.user_id)">个人资料</li>
+        <li @click="edit_skip()">个人资料</li>
         <li>收货地址</li>
       </ul>
     </aside>
@@ -100,9 +100,8 @@ export default {
     fetchAddresses() {
       // 获取用户地址列表
       axios
-          .post("http://localhost:8081/api/addresses/find", {
-            user_id: this.$route.params.user_id,
-          })
+          .get("http://localhost:8081/api/addresses/find",
+      {withCredentials: true})
           .then((response) => {
             this.userAddresses = response.data.addresses || [];
           })
@@ -172,8 +171,8 @@ export default {
             console.error("新增地址失败：", error);
           });
     },
-    edit_skip(user_id) {
-      this.$router.push({ name: "profile", params: { user_id: user_id } });
+    edit_skip() {
+      this.$router.push({ name: "profile" });
     },
   },
 };

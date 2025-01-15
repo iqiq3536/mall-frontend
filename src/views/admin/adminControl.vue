@@ -70,13 +70,24 @@ export default {
   data() {
     return {
       users: [], // 用于存储用户数据的数组
-      // 可能还需要其他数据属性，如新用户表单的数据等
+      user: {
+        username: '',
+        password: '',
+        user_id:'',
+        full_name:'',
+        gender:'',
+        contact_info:'',
+        family_id:'',
+        family_name:''
+
+
+      } // 初始化 u
     };
   },
   methods: {
     // 假设在组件创建时从后端获取用户列表
     fetchUsers() {
-      // 使用 axios 或其他 HTTP 客户端发送 GET 请求到后端接口
+
       axios.get('/api/users') // 替换为实际的接口 URL
           .then(response => {
             this.users = response.data; // 假设后端返回的数据在 response.data 中
