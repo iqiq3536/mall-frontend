@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       userId: this.getCookie('user_id'),  // 获取cookie中的user_id
-      loginLink: '1',   // 替换为您的登录链接
+      loginLink: 'userLogin',   // 替换为您的登录链接
       registerLink: 'userRegister'  // 替换为您的注册链接
     };
   },

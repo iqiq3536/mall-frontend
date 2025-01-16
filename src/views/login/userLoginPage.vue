@@ -47,7 +47,7 @@ export default {
       });
     },
     login() {
-      axios.post('http://localhost:8081/api/login3',{
+      axios.post('http://localhost:8081/api/login_user',{
         username: this.loginForm.username,
         password: this.loginForm.password
       }, {
@@ -56,7 +56,7 @@ export default {
       )
           .then(response => {
             if (response.data.success) {
-              this.$router.push({ name: 'ImgPage' });
+              this.$router.push({ name: 'MallHomePage' });
             } else {
               this.$message.error('登录失败：' + response.data.message);
             }

@@ -104,7 +104,7 @@ const routes = [
       component: () => import('@/views/seller_sys/goodsPage.vue'),
     },
     {
-      path: '/',
+      path: '/image',
       name: 'ImgPage',
       component: () => import('@/views/seller_sys/Products/imgPage.vue'),
     },
