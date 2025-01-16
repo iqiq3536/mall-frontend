@@ -35,7 +35,7 @@ export default {
   },
   mounted() {
     // 检测是否存在 userid Cookie
-    if (!this.checkCookie("userid")) {
+    if (!this.checkCookie("user_id")) {
       this.show = true; // 如果没有，则显示提示框
     }
   },
