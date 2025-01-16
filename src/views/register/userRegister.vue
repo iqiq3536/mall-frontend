@@ -99,16 +99,33 @@ export default {
 
       axios.post(url, userData)
           .then(response => {
-            if (response.data.success) {  // 如果注册成功
+            // 先检查后端返回的数据结构
+            if (response.data && response.data.success) {
+              // 如果注册成功
               Message.success(response.data.message || '注册成功');
-            } else {  // 注册失败，显示错误信息
-              Message.error(response.data.message || '注册失败!');
+            } else {
+              // 如果注册失败，显示后端返回的具体错误信息
+              Message.error(response.data.message || '注册失败');
             }
           })
           .catch(error => {
-            Message.error('注册失败，请稍后再试');
-            console.error(error);
+            // 捕获请求过程中可能的错误
+            if (error.response) {
+              // 如果响应错误，输出详细错误信息
+              console.error('响应错误:', error.response.data);
+              Message.error(error.response.data.message || '服务器错误，请稍后再试');
+            } else if (error.request) {
+              // 如果没有收到响应
+              console.error('请求错误:', error.request);
+              Message.error('网络错误，请稍后再试');
+            } else {
+              // 其他错误
+              console.error('其他错误:', error.message);
+              Message.error('发生未知错误，请稍后再试');
+            }
           });
+
+
     }
   }
 };
