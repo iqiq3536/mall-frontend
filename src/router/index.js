@@ -5,13 +5,14 @@ import LoginPage from '@/views/login/loginPage.vue';
 import HomePage from '@/views/home/homePage.vue'
 import MallHomePage from "@/views/home/MallHomePage.vue";
 import ProductDetail from "@/components/ProductDetail.vue";
+import searchResult from "@/views/product/searchResult.vue";
 // import LoginPage2 from '@/views/login/loginPage2.vue';
 
 Vue.use(Router);
 
 const routes = [
-    {
-        path: '/home',
+    {//首页
+        path: '/mallhome',
         name: 'MallHomePage',
         component: MallHomePage,
     },
@@ -19,6 +20,11 @@ const routes = [
         path: "/product/:id", // 商品详情页，动态参数 `id`
         name: "ProductDetail",
         component: ProductDetail,
+    },
+    {
+        path: "/search_result", // 商品详情页，动态参数 `id`
+        name: "SearchResult",
+        component: searchResult,
     },
     //登录页面
     {
@@ -132,8 +138,7 @@ const routes = [
         path: '/user_order_details_list',
         name: 'user_order_details_list',
         component: () => import('@/views/order/user_order/user_order_details_list.vue')
-    },
-
+    }
 ];
 
 

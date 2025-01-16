@@ -17,6 +17,7 @@
 
 <script>
 import axios from "axios";
+//import Cookies from 'js-cookie';
 
 export default {
   data() {
@@ -68,13 +69,13 @@ export default {
       });
     },
     login() {
-      axios.post('http://localhost:8081/api/login', {
+      axios.post('http://localhost:8081/api/login3', {
         username: this.loginForm.username,
         password: this.loginForm.password
-      })
+      },{withCredentials:true})
           .then(response => {
             if (response.data.success) {
-              this.$router.push({ name: 'User', params: { user_id: response.data.user_id} });
+              this.$router.push({ name: 'User', params: { user_id: response.data.user_id}});
             } else {
               this.$message.error('登录失败：' + response.data.message);// response.data.user.user_id
             }

@@ -4,89 +4,177 @@
     <aside class="sidebar">
       <h2 class="sidebar-title">账户管理</h2>
       <ul class="nav-list">
-        <li
-            v-for="(item, index) in navItems"
-            :key="index"
-            :class="{ active: activeItem === item.key }"
-            @click="handleNavClick(item.key)"
-        >
-          {{ item.label }}
-        </li>
+        <li @click="edit_skip()">个人资料</li>
+        <li>收货地址</li>
       </ul>
     </aside>
 
     <!-- 右侧内容区域 -->
     <main class="content">
-      <div v-if="activeItem === 'address'" class="password-change-form">
-        <form @submit.prevent="addressChange">
-      <table class="address-table">
-        <thead>
-        <tr>
-          <th>地址ID</th>
-          <th>省</th>
-          <th>市</th>
-          <th>区（县）</th>
-          <th>详细地址</th>
-          <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(address, index) in userAddresses" :key="index">
-          <td>{{ address.address_id }}</td>
-          <td>{{ address.province }}</td>
-          <td>{{ address.city }}</td>
-          <td>{{ address.district }}</td>
-          <td>{{ address.detail }}</td>
-          <td>
-            <button @click="modifyAddress(address)">修改</button>
-            <button @click="deleteAddress(address)">删除</button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <button @click="addAddress">新增地址</button>
-        </form>
+      <div class="password-change-form">
+        <table class="address-table">
+          <thead>
+          <tr>
+            <th>地址ID</th>
+            <th>省</th>
+            <th>市</th>
+            <th>区（县）</th>
+            <th>详细地址</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(address, index) in userAddresses" :key="index">
+            <td>{{ address.address_id }}</td>
+            <td>{{ address.province }}</td>
+            <td>{{ address.city }}</td>
+            <td>{{ address.country }}</td>
+            <td>{{ address.detail }}</td>
+            <td>
+              <button @click="openEditModal(address)">修改</button>
+              <button @click="deleteAddress(address)">删除</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <button @click="openAddModal">新增地址</button>
       </div>
     </main>
+
+    <!-- 弹出框 -->
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <h3>{{ modalType === 'edit' ? '修改地址' : '新增地址' }}</h3>
+        <form @submit.prevent="modalType === 'edit' ? saveAddress() : addAddress()">
+          <label>
+            省:
+            <input type="text" v-model="currentAddress.province" required />
+          </label>
+          <label>
+            市:
+            <input type="text" v-model="currentAddress.city" required />
+          </label>
+          <label>
+            区（县）:
+            <input type="text" v-model="currentAddress.country" required />
+          </label>
+          <label>
+            详细地址:
+            <input type="text" v-model="currentAddress.detail" required />
+          </label>
+          <div class="modal-actions">
+            <button type="submit">保存</button>
+            <button type="button" @click="closeModal">取消</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-//import axios from "axios";
+import axios from "axios";
 
 export default {
   data() {
     return {
-      activeItem: 'profile', // 假设这是从父组件传递来的
-      navItems: [
-        { key: "EditUser", label: "安全管理" },
-        { key: "profile", label: "个人资料" },
-        { key: "address", label: "收货地址" },
-      ],
-      user: {
-
-        username: '',
-        password: '',
+      user:{
         user_id:'',
-        full_name:'',
-        gender:'',
-        contact_info:'',
-        family_id:'',
-        family_name:''
-
-
-      }
+      },
+      userAddresses: [], // 存储用户地址列表
+      showModal: false, // 控制弹出框的显示与隐藏
+      modalType: "", // 弹出框类型: 'edit' 或 'add'
+      currentAddress: {
+        address_id: "",
+        province: "",
+        city: "",
+        country: "",
+        detail: "",
+      },
     };
   },
+  created() {
+    this.fetchAddresses();
+  },
   methods: {
-    handleNavClick(key) {
-      this.activeItem = key;
-      this.$router.push({ name: key }); // 根据路由名称跳转
+    fetchAddresses() {
+      // 获取用户地址列表
+      axios
+          .get("http://localhost:8081/api/addresses/find",
+      {withCredentials: true})
+          .then((response) => {
+            this.userAddresses = response.data.addresses || [];
+          })
+          .catch((error) => {
+            console.error("获取地址失败：", error);
+          });
     },
-    addressChange(){
-
-    }
-  }
+    openEditModal(address) {
+      // 打开修改地址弹出框
+      this.modalType = "edit";
+      this.currentAddress = { ...address }; // 复制当前地址
+      this.showModal = true;
+    },
+    openAddModal() {
+      // 打开新增地址弹出框
+      this.modalType = "add";
+      this.currentAddress = {
+        address_id: "",
+        province: "",
+        city: "",
+        country: "",
+        detail: "",
+      };
+      this.showModal = true;
+    },
+    closeModal() {
+      // 关闭弹出框
+      this.showModal = false;
+    },
+    saveAddress() {
+      // 保存修改的地址
+      axios
+          .post("http://localhost:8081/api/addresses/update", this.currentAddress)
+          .then(() => {
+            this.closeModal();
+            this.fetchAddresses(); // 刷新地址列表
+          })
+          .catch((error) => {
+            console.error("更新地址失败：", error);
+          });
+    },
+    deleteAddress(address) {
+      // 删除地址
+      axios
+          .post("http://localhost:8081/api/addresses/delete", {
+            address_id: address.address_id,
+          })
+          .then(() => {
+            this.fetchAddresses(); // 刷新地址列表
+          })
+          .catch((error) => {
+            console.error("删除地址失败：", error);
+          });
+    },
+    addAddress() {
+      // 新增地址
+      axios
+          .post("http://localhost:8081/api/addresses/add", {
+            ...this.currentAddress,
+            user_id: this.$route.params.user_id,
+          })
+          .then(() => {
+            this.closeModal();
+            this.fetchAddresses(); // 刷新地址列表
+          })
+          .catch((error) => {
+            console.error("新增地址失败：", error);
+          });
+    },
+    edit_skip() {
+      this.$router.push({ name: "profile" });
+    },
+  },
 };
 </script>
 
@@ -140,12 +228,14 @@ export default {
   flex: 1;
   padding: 20px;
 }
+
 .address-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.address-table th, .address-table td {
+.address-table th,
+.address-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
@@ -154,5 +244,36 @@ export default {
 button {
   padding: 5px 10px;
   margin: 5px;
+}
+
+/* 弹出框样式 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  margin-left: 10px;
 }
 </style>

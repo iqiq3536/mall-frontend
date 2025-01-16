@@ -4,47 +4,50 @@
     <aside class="sidebar">
       <h2 class="sidebar-title">账户管理</h2>
       <ul class="nav-list">
-        <li
-            v-for="(item, index) in navItems"
-            :key="index"
-            :class="{ active: activeItem === item.key }"
-            @click="handleNavClick(item.key)"
-        >
-          {{ item.label }}
-        </li>
+        <li>个人资料</li>
+        <li  @click="edit_skip()">收货地址</li>
       </ul>
     </aside>
 
     <!-- 右侧内容区域 -->
     <main class="content">
-      <div v-if="activeItem === 'profile'" class="password-change-form">
+      <div  class="profile-info-form">
         <h2 class="form-title">个人信息展示</h2>
-        <form @submit.prevent="handleSubmit">
-          <div class="form-group">
-            <label for="username">用户名:</label>
-            <input type="text" v-model="user.username" id="username" disabled>
-          </div>
-          <div class="form-group">
-            <label for="email">邮箱:</label>
-            <input type="email" v-model="user.email" id="email" disabled>
-          </div>
-          <!-- 如果需要修改密码或其他字段，可以添加更多的form-group -->
-          <div class="form-group" v-if="editable">
-            <button type="button" @click="editProfile">编辑</button>
-          </div>
+        <div class="form-group">
+          <label for="username">用户名:</label>
+          <template v-if="!editing">{{ user.username }}</template>
+          <input v-else type="text" v-model="user.username" id="username" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="password">密码:</label>
+          <template v-if="!editing">******</template>
+          <input v-else type="password" v-model="user.password" id="password" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="full_name">姓名:</label>
+          <template v-if="!editing">{{ user.full_name }}</template>
+          <input v-else type="text" v-model="user.full_name" id="full_name" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="gender">性别:</label>
+          <template v-if="!editing">{{ user.gender }}</template>
+          <input v-else type="text" v-model="user.gender" id="gender" class="form-control">
+        </div>
+        <div class="form-group">
+          <label for="email">邮箱:</label>
+          <template v-if="!editing">{{ user.contact_info }}</template>
+          <input v-else type="email" v-model="user.contact_info" id="email" class="form-control">
+        </div>
+        <div class="form-actions">
+          <button v-if="editable && !editing" type="button" @click="editProfile" class="button primary">编辑</button>
           <div v-if="editing">
-            <div class="form-group">
-              <label for="newEmail">新邮箱:</label>
-              <input type="email" v-model="newEmail" id="newEmail">
-            </div>
-            <!-- 添加其他需要修改的字段 -->
-            <button type="submit">保存修改</button>
-            <button type="button" @click="cancelEdit">取消</button>
+            <button type="button" @click="cancelEdit" class="button secondary">取消</button>
+            <button type="button" @click="handleSubmit" class="button primary">保存修改</button>
           </div>
-          <div v-if="errorMessage" class="error" >
-            {{ errorMessage }}
-          </div>
-        </form>
+        </div>
+        <div v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
       </div>
     </main>
   </div>
@@ -56,18 +59,11 @@ import axios from "axios";
 export default {
   data() {
     return {
-      activeItem: 'profile', // 假设这是从父组件传递来的
       newEmail: '',
-      editable: true, // 控制是否显示编辑按钮
-      editing: false, // 控制是否处于编辑模式
-      errorMessage: '',// 错误信息显示
-      navItems: [
-        { key: "EditUser", label: "安全管理" },
-        { key: "profile", label: "个人资料" },
-        { key: "address", label: "收货地址" },
-      ],
+      editable: true,
+      editing: false,
+      errorMessage: '',
       user: {
-
         username: '',
         password: '',
         user_id:'',
@@ -76,61 +72,69 @@ export default {
         contact_info:'',
         family_id:'',
         family_name:''
-
-
       }
     };
   },
+  created() {
+    this.fetchUserData();
+    /*if (this.$route.params.user_id) {
+      this.fetchUserData(this.$route.params.user_id);
+    } else {
+      console.error('未找到user_id参数');
+    }*/
+  },
   methods: {
-    handleNavClick(key) {
-      this.activeItem = key;
-      this.$router.push({ name: key }); // 根据路由名称跳转
+    edit_skip() {
+      this.$router.push({ name: 'address'});
     },
-    async fetchUserData() {
-      try {
-        // 假设从某处获取了userId
-        const userId = 1; // 这里应该根据实际情况获取或传递userId
-        const response = await axios.get(`http://localhost:8081/api/user/findUserById?id=${userId}`);
-        this.user = response.data;
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-        this.errorMessage = '无法加载用户信息，请稍后再试。';
-      }
-    },
+     fetchUserData() {
+
+       axios.get('http://localhost:8081/api/user/findUserById',
+       {withCredentials: true})
+           .then(response => {
+             this.user.username = response.data.username; // 更新username属性
+             this.user.gender = response.data.gender;
+             this.user.password = response.data.password;
+             this.user.contact_info = response.data.contact_info;
+             this.user.family_id = response.data.family_id;
+             this.user.full_name = response.data.full_name;
+             this.user.user_id = response.data.user_id;
+             this.user.family_name = response.data.family_name;
+             this.user.contact_info = response.data.contact_info;
+           }) .catch(error => {
+         console.error('请求失败：', error);
+       });
+     },
     editProfile() {
       this.editing = true;
-      this.newEmail = this.user.email; // 初始化新邮箱为当前邮箱
-      // 禁用原始信息输入框
-      const inputs = document.querySelectorAll('.form-group input[disabled]');
-      inputs.forEach(input => input.removeAttribute('disabled'));
+      // 保存用户原始信息，以便取消时恢复
+      this.originalUser = { ...this.user };
     },
     cancelEdit() {
       this.editing = false;
-      this.newEmail = '';
-      // 恢复原始信息输入框为禁用状态
-      const inputs = document.querySelectorAll('.form-group input[type="text"], .form-group input[type="email"]');
-      inputs.forEach(input => input.setAttribute('disabled', ''));
+      // 恢复用户原始信息
+      this.user = { ...this.originalUser };
       this.errorMessage = '';
     },
-    async handleSubmit() {
-      try {
-        // 这里应该添加验证逻辑
-        const updatedUser = {
-          ...this.user,
-          email: this.newEmail
-          // 添加其他需要更新的字段
-        };
-        // 发送更新请求到后端（这里假设有一个更新API）
-        const response = await axios.put('http://localhost:8081/api/user/updateUser', updatedUser);
-        // 更新本地用户数据（如果需要）
-        this.user = response.data;
-        this.cancelEdit(); // 保存后退出编辑模式
-        this.errorMessage = '';
-        // 可以添加成功提示
-      } catch (error) {
-        console.error('Error updating user data:', error);
-        this.errorMessage = '保存失败，请稍后再试。';
-      }
+    handleSubmit() {
+      const updatedUser = {
+        ...this.originalUser,
+        username: this.user.username,
+        email: this.user.email,
+        password: this.user.password,
+        full_name: this.user.full_name,
+        gender: this.user.gender,
+        // 其他属性保持不变
+      };
+      axios.post('http://localhost:8081/api/user/updateUserById', updatedUser)
+          .then(response => {
+            console.log('信息更新成功', response);
+            this.editing = false; // 保存成功后取消编辑状态
+            this.originalUser = { ...this.user }; // 更新 originalUser 为最新修改后的信息
+          })
+          .catch(error => {
+            console.error('信息更新失败', error);
+          });
     }
   }
 };
@@ -140,12 +144,13 @@ export default {
 .user-edit-container {
   display: flex;
   height: 100vh;
-  background-color: #f9f9f9;
+  background-color: #f0f2f5;
+  font-family: 'Arial', sans-serif;
 }
 
 /* 左侧导航栏样式 */
 .sidebar {
-  width: 200px;
+  width: 220px;
   background-color: #fff;
   border-right: 1px solid #ebebeb;
   padding: 20px;
@@ -174,6 +179,8 @@ export default {
 
 .nav-list li:hover {
   color: #ff4d4f;
+  background-color: #f7f7f7;
+  border-radius: 4px;
 }
 
 .nav-list li.active {
@@ -184,72 +191,90 @@ export default {
 /* 右侧内容区域样式 */
 .content {
   flex: 1;
-  padding: 20px;
+  padding: 40px;
 }
 
-
-/* 密码修改表单样式 */
-.password-change-form {
-  max-width: 400px;
+/* 个人信息表单样式 */
+.profile-info-form {
+  max-width: 600px;
   margin: 0 auto;
   background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-title {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
   text-align: center;
   color: #333;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
   font-size: 14px;
   color: #555;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
 }
 
 .form-control {
   width: 100%;
-  padding: 8px 10px;
+  padding: 12px;
   font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
   outline: none;
+  transition: border-color 0.2s ease;
 }
 
 .form-control:focus {
-  border-color: #ff4d4f;
-  box-shadow: 0 0 3px rgba(255, 77, 79, 0.5);
+  border-color: #3498db;
+  box-shadow: 0 0 5px rgba(52, 152, 219, 0.2);
 }
 
-.error-message {
-  color: #ff4d4f;
-  font-size: 12px;
-  margin-bottom: 15px;
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
-.submit-button {
-  width: 100%;
-  padding: 10px;
+.button {
+  padding: 10px 20px;
   font-size: 14px;
-  color: #fff;
-  background-color: #ff4d4f;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.submit-button:hover {
-  background-color: #e33c3e;
+.button.primary {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.button.primary:hover {
+  background-color: #2980b9;
+}
+
+.button.secondary {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.button.secondary:hover {
+  background-color: #d5d5d5;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>
