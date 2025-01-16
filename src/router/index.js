@@ -7,13 +7,16 @@ import MallHomePage from "@/views/home/MallHomePage.vue";
 import ProductDetail from "@/components/ProductDetail.vue";
 import searchResult from "@/views/productSearch/searchResult.vue";
 import userRegister from "@/views/register/userRegister.vue";
+import adminLoginPage from "@/views/login/adminLoginPage.vue";
+import merchantLoginPage from "@/views/login/merchantLoginPage.vue";
+import userLoginPage from "@/views/login/userLoginPage.vue";
 // import LoginPage2 from '@/views/login/loginPage2.vue';
 
 Vue.use(Router);
 
 const routes = [
     {//首页
-        path: '/mallhome',
+        path: '/',
         name: 'MallHomePage',
         component: MallHomePage,
     },
@@ -144,7 +147,24 @@ const routes = [
         path: '/user_order_details_list',
         name: 'user_order_details_list',
         component: () => import('@/views/order/user_order/user_order_details_list.vue')
-    }
+    },
+    //登录页面
+    {
+        path: '/userLogin',
+        name: 'userLoginPage',
+        component: userLoginPage,
+    },
+//登录页面2
+    {
+        path: '/merchantLogin',
+        name: 'merchantLoginPage',
+        component: merchantLoginPage,
+    },
+//登录页面3
+    {
+        path: '/adminLogin',
+        name: 'adminLoginPage',
+        component: adminLoginPage,}
 ];
 
 
