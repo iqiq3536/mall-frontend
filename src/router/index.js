@@ -5,7 +5,8 @@ import LoginPage from '@/views/login/loginPage.vue';
 import HomePage from '@/views/home/homePage.vue'
 import MallHomePage from "@/views/home/MallHomePage.vue";
 import ProductDetail from "@/components/ProductDetail.vue";
-import searchResult from "@/views/product/searchResult.vue";
+import searchResult from "@/views/productSearch/searchResult.vue";
+import userRegister from "@/views/register/userRegister.vue";
 // import LoginPage2 from '@/views/login/loginPage2.vue';
 
 Vue.use(Router);
@@ -22,9 +23,14 @@ const routes = [
         component: ProductDetail,
     },
     {
-        path: "/search_result", // 商品详情页，动态参数 `id`
+        path: "/search_result",
         name: "SearchResult",
         component: searchResult,
+    },
+    {
+      path: "/userRegister",
+      name: "UserRegister",
+      component: userRegister,
     },
     //登录页面
     {

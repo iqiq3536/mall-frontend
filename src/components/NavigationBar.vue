@@ -9,13 +9,15 @@
             <li><router-link to="/home/popular" class="dropdown-link">热销</router-link></li>
           </ul>
         </li>
-        <li class="navbar-item">
+        <li class="navbar-item" v-if="userId">
           <router-link to="/user" class="navbar-link">用户</router-link>
           <ul class="dropdown">
             <li><router-link to="/user/profile" class="dropdown-link">个人信息</router-link></li>
             <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
-            <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
           </ul>
+        </li>
+        <li class="navbar-item" v-else>
+          <span>您好，请 <a :href="loginLink" class="login-link">登录</a> 或 <a :href="registerLink" class="register-link">注册</a></span>
         </li>
       </ul>
     </div>
@@ -47,9 +49,25 @@
   </nav>
 </template>
 
+
 <script>
 export default {
   name: 'NavigationBar',
+  data() {
+    return {
+      userId: this.getCookie('user_id'),  // 获取cookie中的user_id
+      loginLink: '1',   // 替换为您的登录链接
+      registerLink: 'userRegister'  // 替换为您的注册链接
+    };
+  },
+  methods: {
+    // 获取 cookie 中的值
+    getCookie(name) {
+      let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+      if (match) return match[2];
+      return null;
+    }
+  }
 };
 </script>
 
@@ -131,7 +149,27 @@ export default {
   background-color: #f0f0f0;
   color: #ff0048;
 }
+.navbar-item span {
+  font-size: 16px;
+  color: #333;
+}
+
+.navbar-item .login-link,
+.navbar-item .register-link {
+  color: #3eb0b2;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 0 5px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-item .login-link:hover,
+.navbar-item .register-link:hover {
+  color: #5a00b3;  /* 鼠标悬停时变为深蓝色 */
+  transform: translateY(-3px);  /* 鼠标悬停时产生轻微上移效果 */
+}
 </style>
+
 
 
 
