@@ -59,8 +59,9 @@ export default {
   },
   methods: {
     fetchMerchantOrderDetails() {
-      const merchantId = 1; // 假设商家ID是1
-      axios.get(`http://localhost:8081/api/order_details/getOrder_details_merchant_list/${merchantId}`)
+      //const merchantId = 1; // 假设商家ID是1
+      axios.get(`http://localhost:8081/api/order_details/getOrder_details_merchant_list`,
+      {withCredentials: true})
           .then(response => {
             this.order_details_list = response.data.order_details_list;
             this.order_details_list.forEach((orderDetail) => {
