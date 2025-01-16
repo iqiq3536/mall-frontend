@@ -102,7 +102,7 @@ export default {
             if (response.data.success) {  // 如果注册成功
               Message.success(response.data.message || '注册成功');
             } else {  // 注册失败，显示错误信息
-              Message.error(response.data.message || '注册失败');
+              Message.error(response.data.message || '注册失败!');
             }
           })
           .catch(error => {
