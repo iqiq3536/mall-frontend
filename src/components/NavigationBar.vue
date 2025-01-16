@@ -38,10 +38,10 @@
           </ul>
         </li>
         <li class="navbar-item">
-          <router-link to="/merchant-services" class="navbar-link">商家服务</router-link>
+          <router-link to="/merchantLogin" class="navbar-link">商家服务</router-link>
           <ul class="dropdown">
-            <li><router-link to="/merchant-services/dashboard" class="dropdown-link">商家面板</router-link></li>
-            <li><router-link to="/merchant-services/support" class="dropdown-link">支持</router-link></li>
+            <li><router-link to="/merchantLogin" class="dropdown-link">商家面板</router-link></li>
+            <li><router-link to="/merchantLogin" class="dropdown-link">支持</router-link></li>
           </ul>
         </li>
       </ul>
