@@ -28,6 +28,16 @@
         <el-input v-model="form.contact_info" autocomplete="off" placeholder="请输入邮箱"></el-input>
       </el-form-item>
 
+      <el-form-item label="验证码" prop="captcha">
+        <el-input v-model="form.captcha" autocomplete="off" placeholder="请输入验证码"></el-input>
+        <el-button
+            :disabled="isButtonDisabled"
+            @click="sendCaptcha"
+            type="text">
+          {{ countdown > 0 ? countdown + '秒后重发' : '获取验证码' }}
+        </el-button>
+      </el-form-item>
+
       <el-form-item>
         <el-button type="primary" @click="submitForm">注册</el-button>
       </el-form-item>
@@ -46,9 +56,10 @@ export default {
         username: '',
         password: '',
         confirmPassword: '',
-        full_name: '',  // 修改为 full_name
+        full_name: '',
         gender: '',
-        contact_info: '',  // 修改为 contact_info
+        contact_info: '',
+        captcha: '',  // 添加验证码字段
       },
       rules: {
         username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -59,11 +70,15 @@ export default {
         ],
         full_name: [{ required: true, message: '请输入真名', trigger: 'blur' }],
         gender: [{ required: true, message: '请选择性别', trigger: 'change' }],
-        contact_info: [  // 修改为 contact_info
+        contact_info: [
           { required: true, message: '请输入邮箱', trigger: 'blur' },
           { type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur' }
         ],
-      }
+        captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+      },
+      isButtonDisabled: false,  // 控制按钮是否禁用
+      countdown: 0,  // 倒计时秒数
+      countdownTimer: null,  // 保存倒计时的定时器
     };
   },
   methods: {
@@ -75,10 +90,37 @@ export default {
         callback();
       }
     },
+    sendCaptcha() {
+      // 禁用按钮并开始倒计时
+      this.isButtonDisabled = true;
+      this.countdown = 60;  // 设置倒计时为60秒
+      this.countdownTimer = setInterval(() => {
+        if (this.countdown > 0) {
+          this.countdown--;  // 倒计时减少
+        } else {
+          clearInterval(this.countdownTimer);  // 倒计时结束，清除定时器
+          this.isButtonDisabled = false;  // 启用按钮
+        }
+      }, 1000);  // 每秒更新一次倒计时
+
+      // 发送验证码请求
+      axios.post('http://localhost:8081/api/user/sendEmail', {
+        email: this.form.contact_info  // 确保传递了 email 参数
+      })
+          .then(response => {
+            if (response.data.success) {
+              Message.success('验证码已发送');
+            } else {
+              Message.error(response.data.message);
+            }
+          })
+          .catch(() => {
+            Message.error('验证码发送失败');
+          });
+    },
     submitForm() {
       this.$refs.formRef.validate((valid) => {
         if (valid) {
-          // 发送请求到后端
           this.registerUser();
         } else {
           console.log('表单验证失败');
@@ -92,44 +134,27 @@ export default {
         password: this.form.password,
         full_name: this.form.full_name,
         gender: this.form.gender,
-        contact_info: this.form.contact_info
+        contact_info: this.form.contact_info,
       };
 
-      const url = 'http://localhost:8081/api/user/addUser';
+      const url = 'http://localhost:8081/api/user/addUser?captcha=' + this.form.captcha;
 
       axios.post(url, userData)
           .then(response => {
-            // 先检查后端返回的数据结构
             if (response.data && response.data.success) {
-              // 如果注册成功
               Message.success(response.data.message || '注册成功');
             } else {
-              // 如果注册失败，显示后端返回的具体错误信息
               Message.error(response.data.message || '注册失败');
             }
           })
-          .catch(error => {
-            // 捕获请求过程中可能的错误
-            if (error.response) {
-              // 如果响应错误，输出详细错误信息
-              console.error('响应错误:', error.response.data);
-              Message.error(error.response.data.message || '服务器错误，请稍后再试');
-            } else if (error.request) {
-              // 如果没有收到响应
-              console.error('请求错误:', error.request);
-              Message.error('网络错误，请稍后再试');
-            } else {
-              // 其他错误
-              console.error('其他错误:', error.message);
-              Message.error('发生未知错误，请稍后再试');
-            }
+          .catch(() => {
+            Message.error('服务器错误，请稍后再试');
           });
-
-
     }
   }
 };
 </script>
+
 
 <style scoped>
 .register-container {
@@ -140,4 +165,5 @@ export default {
   border-radius: 8px;
 }
 </style>
+
 

@@ -60,8 +60,8 @@ const routes = [
     },
     {
 
-        path: "/sellerLogin",
-        name: "sellerLogin",
+        path: "/sellerControl",
+        name: "sellerControl",
         component: () => import("@/views/admin/sellerControl.vue"),
     },
     {

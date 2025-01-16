@@ -56,7 +56,7 @@ export default {
       )
           .then(response => {
             if (response.data.success) {
-              this.$router.push({ name: 'ImgPage' });
+              this.$router.push({ name: 'adminControl' });
             } else {
               this.$message.error('登录失败：' + response.data.message);
             }
