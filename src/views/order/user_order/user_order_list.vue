@@ -21,7 +21,9 @@
         <td>{{ order.shipping_address }}</td>
         <td>{{ order.pay_method }}</td>
         <td>{{ order.order_status }}</td>
-        <td><button @click="viewDetails(order.order_id)">查看详情</button></td>
+        <td><button @click="viewDetails(order.order_id)">查看详情</button>
+          <button @click="deleteOrder(order.order_id)">删除订单</button>
+        </td>
       </tr>
       </tbody>
     </table>
@@ -42,8 +44,8 @@ export default {
   },
   methods: {
     fetchOrdersList() {
-      const userId = 1; // 假设用户ID是1
-      axios.get(`http://localhost:8081/api/orders/getOrders_list/${userId}`)
+      //const userId = 1; // 假设用户ID是1
+      axios.get(`http://localhost:8081/api/orders/getOrders_list`,{withCredentials: true})
           .then(response => {
             this.orders_list = response.data.orders_list;
           })

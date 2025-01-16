@@ -4,6 +4,7 @@
     <table>
       <thead>
       <tr>
+        <th>订单编号</th>
         <th>产品名称</th>
         <th>图片</th>
         <th>数量</th>
@@ -17,6 +18,7 @@
       </thead>
       <tbody>
       <tr v-for="orderDetail in order_details_list" :key="orderDetail.order_detail_id">
+        <td>{{ orderDetail.orderNo }}</td>
         <td>{{ orderDetail.name }}</td>
         <td><img :src="orderDetail.img_url" alt="product image" width="50" height="50"></td>
         <td>{{ orderDetail.quantity }}</td>
