@@ -4,7 +4,7 @@
     <table>
       <thead>
       <tr>
-        <th>产品名称</th>
+        <th>商品名称</th>
         <th>图片</th>
         <th>数量</th>
         <th>总金额</th>
@@ -63,7 +63,8 @@ export default {
       axios.get(`http://localhost:8081/api/order_details/getOrder_details_merchant_list`,
       {withCredentials: true})
           .then(response => {
-            this.order_details_list = response.data.order_details_list;
+            console.log('Fetched data:', response.data); // 添加调试信息
+            this.order_details_list = response.data;
             this.order_details_list.forEach((orderDetail) => {
               this.fetchProductInfo(orderDetail.product_id, orderDetail);
             });
@@ -73,9 +74,10 @@ export default {
           });
     },
     fetchProductInfo(productId, orderDetail) {
-      axios.get(`http://localhost:8081/api/get_product/${productId}`)
+      axios.post(`http://localhost:8081/api/order_details/get_product`, { product_id: productId})
           .then(response => {
-            orderDetail.name = response.data.name;
+            //this.order_details_list = response.data.map(orderDetail =>( { ...orderDetail}));
+            orderDetail.name = response.data.name;//这里
             orderDetail.img_url = response.data.img_url;
           })
           .catch(error => {

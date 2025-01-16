@@ -163,7 +163,13 @@ const routes = [
     {
         path: '/adminLogin',
         name: 'adminLoginPage',
-        component: adminLoginPage,}
+        component: adminLoginPage,
+    },
+    {
+        path: '/merchantorder',
+        name: 'merchantorder',
+        component: () => import('@/views/order/merchant_order/merchant_order_details_list.vue'),
+    },
 ];
 
 
