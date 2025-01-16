@@ -24,12 +24,13 @@
           </tr>
           </thead>
           <tbody>
+          <!--<tr v-for="address in userAddresses" :key="address.address_id">-->
           <tr v-for="(address, index) in userAddresses" :key="index">
             <td>{{ address.address_id }}</td>
             <td>{{ address.province }}</td>
             <td>{{ address.city }}</td>
-            <td>{{ address.country }}</td>
-            <td>{{ address.detail }}</td>
+            <td>{{ address.county }}</td>
+            <td>{{ address.detailedAddress }}</td>
             <td>
               <button @click="openEditModal(address)">修改</button>
               <button @click="deleteAddress(address)">删除</button>
@@ -56,11 +57,11 @@
           </label>
           <label>
             区（县）:
-            <input type="text" v-model="currentAddress.country" required />
+            <input type="text" v-model="currentAddress.county" required />
           </label>
           <label>
             详细地址:
-            <input type="text" v-model="currentAddress.detail" required />
+            <input type="text" v-model="currentAddress.detailedAddress" required />
           </label>
           <div class="modal-actions">
             <button type="submit">保存</button>
@@ -88,8 +89,9 @@ export default {
         address_id: "",
         province: "",
         city: "",
-        country: "",
-        detail: "",
+        county: "",
+        detailedAddress: "",
+        user_id:""
       },
     };
   },
@@ -103,11 +105,18 @@ export default {
           .get("http://localhost:8081/api/addresses/find",
       {withCredentials: true})
           .then((response) => {
-            this.userAddresses = response.data.addresses || [];
+            this.userAddresses = response.data.map(address => ({
+              ...address,
+             // isEditing: false,
+          }));
+            console.log(response.data)
+
           })
           .catch((error) => {
-            console.error("获取地址失败：", error);
+            console.error("Error fetching addresses:", error);
+            // 可以在这里设置一些错误状态或显示错误消息
           });
+
     },
     openEditModal(address) {
       // 打开修改地址弹出框
@@ -122,8 +131,8 @@ export default {
         address_id: "",
         province: "",
         city: "",
-        country: "",
-        detail: "",
+        county: "",
+        detailedAddress: "",
       };
       this.showModal = true;
     },
@@ -135,12 +144,19 @@ export default {
       // 保存修改的地址
       axios
           .post("http://localhost:8081/api/addresses/update", this.currentAddress)
-          .then(() => {
-            this.closeModal();
-            this.fetchAddresses(); // 刷新地址列表
+          .then((response) => {
+            if (response.status === 200) {
+              // 请求成功
+              console.log("地址更新成功：", response.data);
+              this.closeModal();
+              this.fetchAddresses(); // 刷新地址列表
+            } else {
+              console.error("更新地址失败：", response.data);
+            }
           })
           .catch((error) => {
-            console.error("更新地址失败：", error);
+            console.error("网络错误：", error);
+            // 在这里可以添加适当的错误处理逻辑，比如提示用户网络错误
           });
     },
     deleteAddress(address) {
@@ -161,8 +177,8 @@ export default {
       axios
           .post("http://localhost:8081/api/addresses/add", {
             ...this.currentAddress,
-            user_id: this.$route.params.user_id,
-          })
+          //  user_id: this.$route.params.user_id,
+          },{withCredentials: true})
           .then(() => {
             this.closeModal();
             this.fetchAddresses(); // 刷新地址列表
