@@ -5,14 +5,18 @@ import LoginPage from '@/views/login/loginPage.vue';
 import HomePage from '@/views/home/homePage.vue'
 import MallHomePage from "@/views/home/MallHomePage.vue";
 import ProductDetail from "@/components/ProductDetail.vue";
-import searchResult from "@/views/product/searchResult.vue";
+import searchResult from "@/views/productSearch/searchResult.vue";
+import userRegister from "@/views/register/userRegister.vue";
+import adminLoginPage from "@/views/login/adminLoginPage.vue";
+import merchantLoginPage from "@/views/login/merchantLoginPage.vue";
+import userLoginPage from "@/views/login/userLoginPage.vue";
 // import LoginPage2 from '@/views/login/loginPage2.vue';
 
 Vue.use(Router);
 
 const routes = [
     {//首页
-        path: '/mallhome',
+        path: '/',
         name: 'MallHomePage',
         component: MallHomePage,
     },
@@ -22,9 +26,14 @@ const routes = [
         component: ProductDetail,
     },
     {
-        path: "/search_result", // 商品详情页，动态参数 `id`
+        path: "/search_result",
         name: "SearchResult",
         component: searchResult,
+    },
+    {
+      path: "/userRegister",
+      name: "UserRegister",
+      component: userRegister,
     },
     //登录页面
     {
@@ -95,7 +104,7 @@ const routes = [
       component: () => import('@/views/seller_sys/goodsPage.vue'),
     },
     {
-      path: '/',
+      path: '/image',
       name: 'ImgPage',
       component: () => import('@/views/seller_sys/Products/imgPage.vue'),
     },
@@ -138,7 +147,24 @@ const routes = [
         path: '/user_order_details_list',
         name: 'user_order_details_list',
         component: () => import('@/views/order/user_order/user_order_details_list.vue')
-    }
+    },
+    //登录页面
+    {
+        path: '/userLogin',
+        name: 'userLoginPage',
+        component: userLoginPage,
+    },
+//登录页面2
+    {
+        path: '/merchantLogin',
+        name: 'merchantLoginPage',
+        component: merchantLoginPage,
+    },
+//登录页面3
+    {
+        path: '/adminLogin',
+        name: 'adminLoginPage',
+        component: adminLoginPage,}
 ];
 
 

@@ -30,12 +30,12 @@ export default {
     },
     // 跳转到登录页面
     goToLogin() {
-      window.location.href = "/login"; // 修改为你的登录页面路径
+      window.location.href = "/userLogin"; // 修改为你的登录页面路径
     },
   },
   mounted() {
     // 检测是否存在 userid Cookie
-    if (!this.checkCookie("userid")) {
+    if (!this.checkCookie("user_id")) {
       this.show = true; // 如果没有，则显示提示框
     }
   },

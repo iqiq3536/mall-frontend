@@ -24,7 +24,6 @@
   </nav>
   <main class="content">
     <div  class="password-change-form">
-      <form @submit.prevent="addressChange">
         <table class="address-table">
           <thead>
           <tr>
@@ -48,17 +47,58 @@
             <td>{{ user.family_id }}</td><!-- 注意：家庭ID这一列可能需要根据您的实际数据模型进行调整 -->
             <td>{{ user.family_name }}</td>
             <td>
-              <button @click="modifyUser(user)">修改</button>
+              <button @click="openEditModal(user)">修改</button>
               <button @click="deleteUser(user)">删除</button>
             </td>
           </tr>
           </tbody>
 
         </table>
-        <button @click="addUser">新增用户</button>
-      </form>
     </div>
   </main>
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <h3>{{ modalType === 'edit' ? '修改用户信息' : '' }}</h3>
+        <form  @submit.prevent="modalType === 'edit' ? saveUser() : addUser">
+          <label>
+            序号:
+            <input type="text" v-model="currentUser.user_id" required />
+          </label>
+          <label>
+            用户名:
+            <input type="text" v-model="currentUser.username" required />
+          </label>
+          <label>
+            密码:
+            <input type="text" v-model="currentUser.password" required />
+          </label>
+          <label>
+            姓名:
+            <input type="text" v-model="currentUser.full_name" required />
+          </label>
+        <label>
+          性别:
+          <input type="text" v-model="currentUser.gender" required />
+        </label>
+        <label>
+          邮箱:
+          <input type="text" v-model="currentUser.contact_info" required />
+        </label>
+        <label>
+          家庭序号:
+          <input type="text" v-model="currentUser.family_id" required />
+        </label>
+        <label>
+          家庭名字:
+          <input type="text" v-model="currentUser.family_name" required />
+        </label>
+          <div class="modal-actions">
+            <button type="submit">保存</button>
+            <button type="button" @click="closeModal">取消</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -70,90 +110,84 @@ export default {
   data() {
     return {
       users: [], // 用于存储用户数据的数组
-      user: {
+      showModal: false, // 控制弹出框的显示与隐藏
+      modalType: "",
+      currentUser: {
         username: '',
         password: '',
-        user_id:'',
-        full_name:'',
-        gender:'',
-        contact_info:'',
-        family_id:'',
-        family_name:''
+        user_id: '',
+        full_name: '',
+        gender: '',
+        contact_info: '',
+        family_id: '',
+        family_name: ''
 
 
       } // 初始化 u
     };
   },
+  created() {
+    this.fetchUsers();
+  },
   methods: {
     // 假设在组件创建时从后端获取用户列表
     fetchUsers() {
 
-      axios.get('/api/users') // 替换为实际的接口 URL
+      axios.get('http://localhost:8081/api/user/findAll') // 替换为实际的接口 URL
           .then(response => {
-            this.users = response.data; // 假设后端返回的数据在 response.data 中
+            this.users = response.data.map(address => ({
+              ...address,
+            }));
           })
           .catch(error => {
             console.error('获取用户列表失败:', error);
-          });
-    },
-    // 修改用户信息的方法
-    modifyUser(user) {
-      // 这里应该有一个表单或对话框让用户输入新信息
-      // 然后使用 axios 发送 PUT 请求到后端接口，如 /api/users/{id}
-      axios.put(`/api/users/${user.user_id}`, {
-        // 这里放置要更新的用户信息，根据后端 API 的要求构造请求体
-        username: user.username,
-        full_name: user.full_name,
-        gender: user.gender,
-        contact_info: user.contact_info,
-        // ... 其他需要更新的字段
-      })
-          .then(() => {
-            // 更新成功后可能需要刷新用户列表或显示成功消息
-            this.fetchUsers(); // 示例：重新获取用户列表以更新显示
           })
-          .catch(error => {
-            console.error('修改用户失败:', error);
+    },
+    openEditModal(user) {
+      // 打开修改地址弹出框
+      this.modalType = "edit";
+      this.currentUser = {...user}; // 复制当前地址
+      this.showModal = true;
+    },
+    closeModal() {
+      // 关闭弹出框
+      this.showModal = false;
+    },
+    saveUser() {
+      // 保存修改的地址
+      axios.post('http://localhost:8081/api/user/updateUserById', this.currentUser)
+          .then(response => {
+            if (response.status === 200) {
+              // 请求成功
+              console.log("用户信息更新成功：", response.data);
+              this.closeModal();
+              this.fetchUsers(); // 刷新地址列表
+            } else {
+              console.error("更新信息失败：", response.data);
+            }
+          })
+          .catch((error) => {
+            console.error("网络错误：", error);
+            // 在这里可以添加适当的错误处理逻辑，比如提示用户网络错误
           });
     },
     // 删除用户的方法
     deleteUser(user) {
-      axios.delete(`/api/users/${user.user_id}`) // 替换为实际的删除用户接口 URL
+      axios
+          .post("http://localhost:8081/api/user/deleteUser", {
+            user_id: user.user_id,
+          })
           .then(() => {
-            // 从用户列表中移除已删除的用户
-            this.users = this.users.filter(u => u.user_id !== user.user_id);
-            // 显示成功消息（可选）
+            this.fetchUsers(); // 刷新地址列表
           })
-          .catch(error => {
-            console.error('删除用户失败:', error);
+          .catch((error) => {
+            console.error("删除用户失败：", error);
           });
     },
-    // 新增用户的方法
     addUser() {
-      // 这里应该有一个表单让用户输入新用户信息
-      // 然后使用 axios 发送 POST 请求到后端接口，如 /api/users
-      axios.post('/api/users', {
-        // 这里放置新用户信息，根据后端 API 的要求构造请求体
-        username: '',
-        full_name: '',
-        gender: '',
-        contact_info: '',
-        // ... 其他必填字段
-      })
-          .then(response => {
-            // 新增成功后将新用户添加到用户列表或显示成功消息
-            this.users.push(response.data); // 假设后端返回了新用户数据
-          })
-          .catch(error => {
-            console.error('新增用户失败:', error);
-          });
-    },
-  },
-  // 生命周期钩子，组件创建时获取用户列表
-  created() {
-    this.fetchUsers();
-  },
-};
+    }
+  }
+  };
 </script>
 
 <style scoped>
@@ -252,6 +286,36 @@ export default {
 button {
   padding: 5px 10px;
   margin: 5px;
+}
+/*弹出框*/
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 90%;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.modal-actions button {
+  margin-left: 10px;
 }
 </style>
 
