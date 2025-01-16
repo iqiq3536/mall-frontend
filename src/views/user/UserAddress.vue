@@ -30,7 +30,7 @@
             <td>{{ address.province }}</td>
             <td>{{ address.city }}</td>
             <td>{{ address.county }}</td>
-            <td>{{ address.detailedAddress }}</td>
+            <td>{{ address.detailed_address }}</td>
             <td>
               <button @click="openEditModal(address)">修改</button>
               <button @click="deleteAddress(address)">删除</button>
@@ -61,7 +61,7 @@
           </label>
           <label>
             详细地址:
-            <input type="text" v-model="currentAddress.detailedAddress" required />
+            <input type="text" v-model="currentAddress.detailed_address" required />
           </label>
           <div class="modal-actions">
             <button type="submit">保存</button>
@@ -90,7 +90,7 @@ export default {
         province: "",
         city: "",
         county: "",
-        detailedAddress: "",
+        detailed_address: "",
         user_id:""
       },
     };
@@ -132,7 +132,8 @@ export default {
         province: "",
         city: "",
         county: "",
-        detailedAddress: "",
+        detailed_address: "",
+        user_id:""
       };
       this.showModal = true;
     },
