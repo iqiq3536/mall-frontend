@@ -9,8 +9,8 @@
             <li><router-link to="/home/popular" class="dropdown-link">热销</router-link></li>
           </ul>
         </li>
-        <li class="navbar-item" v-if="userId">
-          <router-link to="/user" class="navbar-link">用户</router-link>
+        <li class="navbar-item" v-if="userName_test">
+          <router-link to="/user" class="navbar-link">{{ this.userName_test }}</router-link>
           <ul class="dropdown">
             <li><router-link to="/user/profile" class="dropdown-link">个人信息</router-link></li>
             <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
@@ -38,10 +38,10 @@
           </ul>
         </li>
         <li class="navbar-item">
-          <router-link to="/merchant-services" class="navbar-link">商家服务</router-link>
+          <router-link to="/merchantLogin" class="navbar-link">商家服务</router-link>
           <ul class="dropdown">
-            <li><router-link to="/merchant-services/dashboard" class="dropdown-link">商家面板</router-link></li>
-            <li><router-link to="/merchant-services/support" class="dropdown-link">支持</router-link></li>
+            <li><router-link to="/merchantLogin" class="dropdown-link">商家面板</router-link></li>
+            <li><router-link to="/merchantLogin" class="dropdown-link">支持</router-link></li>
           </ul>
         </li>
       </ul>
@@ -51,22 +51,27 @@
 
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'NavigationBar',
   data() {
     return {
-      userId: this.getCookie('user_id'),  // 获取cookie中的user_id
+      userName_test: '',  // 获取cookie中的user_id
       loginLink: 'userLogin',   // 替换为您的登录链接
       registerLink: 'userRegister'  // 替换为您的注册链接
     };
   },
+  created() {
+    this.fetchMerchantName();
+  },
   methods: {
-    // 获取 cookie 中的值
-    getCookie(name) {
-      let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      if (match) return match[2];
-      return null;
-    }
+    fetchMerchantName() {
+      axios.get('http://localhost:8081/api/users_name', {withCredentials: true}).then(response => {
+        this.userName_test = response.data;
+        console.log(this.userName_test);
+      });
+    },
   }
 };
 </script>

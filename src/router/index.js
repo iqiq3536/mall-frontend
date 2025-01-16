@@ -54,15 +54,14 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-
         path: "/adminLogin",
         name: "adminLogin",
-        component: () => import("@/views/admin/adminLogin.vue"),
+        component: () => import("@/views/login/adminLoginPage.vue"),
     },
     {
 
-        path: "/sellerLogin",
-        name: "sellerLogin",
+        path: "/sellerControl",
+        name: "sellerControl",
         component: () => import("@/views/admin/sellerControl.vue"),
     },
     {
@@ -110,23 +109,23 @@ const routes = [
     },
     {
         path: '/ProductAdd',
-        name: 'ImgOut',
+        name: 'ProductAdd',
         component: () => import('@/views/seller_sys/Products/AddPage.vue'),
     },
     {
-        path: '/ProductEdit',
+        path: '/ProductList',
         name: 'TestList',
         component: () => import('@/views/seller_sys/Products/SearchEditDeletePage.vue'),
     },
     {
-        path: '/ProductTest',
-        name: 'Test2',
-        component: () => import('@/views/seller_sys/Products/testPage.vue')
+        path: '/ProductTagList',
+        name: 'ProductTagList',
+        component: () => import('@/views/seller_sys/Products/EditTag.vue')
     },
     {
-        path: '/ProductTagEdit',
-        name: 'Test3',
-        component: () => import('@/views/seller_sys/Products/EditTag.vue')
+        path: '/ProductExam',
+        name: 'ProductExam',
+        component: () => import('@/views/seller_sys/Products/testPage.vue')
     },
     {
         path: '/MyCarts',

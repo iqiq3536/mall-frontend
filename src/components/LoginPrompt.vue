@@ -11,18 +11,25 @@
 </template>
 
 <script>
-import Cookies from "js-cookie"; // 引入 js-cookie 库
+import axios from "axios"; // 引入 js-cookie 库
 
 export default {
   data() {
     return {
-      show: false, // 控制提示框的显示与隐藏
+      userName_test2: '',
+      show: true, // 控制提示框的显示与隐藏
     };
   },
+  created() {
+    this.fetchMerchantName();
+  },
   methods: {
-    // 检查是否存在指定的 Cookie
-    checkCookie(name) {
-      return Cookies.get(name) !== undefined; // js-cookie 的 get 方法返回 undefined 表示不存在
+    fetchMerchantName() {
+      axios.get('http://localhost:8081/api/users_name', {withCredentials: true}).then(response => {
+        this.userName_test2 = response.data;
+        console.log(this.userName_test2)
+        this.show = this.userName_test2 == '';
+      });
     },
     // 关闭提示框
     closePrompt() {
@@ -34,10 +41,7 @@ export default {
     },
   },
   mounted() {
-    // 检测是否存在 userid Cookie
-    if (!this.checkCookie("user_id")) {
-      this.show = true; // 如果没有，则显示提示框
-    }
+
   },
 };
 </script>
