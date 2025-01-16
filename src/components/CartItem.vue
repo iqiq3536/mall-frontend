@@ -1,18 +1,18 @@
 <template>
   <tr>
     <td>
-      <input type="checkbox" :checked="item.selected" @change="selectItem" />
+      <input type="checkbox" :checked="cart_details.selected" @change="selectItem" />
     </td>
-    <td>{{ item.product.name }}</td>
-    <td>{{ item.product.category }}</td>
+    <td>{{ cart_details.product.name }}</td>
+    <td>{{ cart_details.product.category }}</td>
     <td>
-      <img :src="item.product.img_url" alt="product image" @click="goToProductDetail" />
+      <img :src="cart_details.product.img_url" alt="product image" @click="goToProductDetail" />
     </td>
-    <td>{{ item.unit_price }}</td>
+    <td>{{ cart_details.unit_price }}</td>
     <td>
-      <input type="number" :checked="item.quantity" @blur="updateQuantity" min="1" />
+      <input type="number" :checked="cart_details.quantity" @blur="updateQuantity" min="1" />
     </td>
-    <td>{{ item.create_data }}</td>
+    <td>{{ cart_details.create_data }}</td>
     <td>
       <button @click="deleteItem">删除</button>
     </td>
@@ -21,19 +21,19 @@
 
 <script>
 export default {
-  props: ['item', 'selected'],
+  props: ['cart_details', 'selected'],
   methods: {
     updateQuantity() {
-      this.$emit('update-quantity', this.item, this.item.quantity);
+      this.$emit('update-quantity', this.cart_details, this.item.quantity);
     },
     deleteItem() {
-      this.$emit('delete-item', this.item);
+      this.$emit('delete-item', this.cart_details);
     },
     selectItem() {
-      this.$emit('select-item', this.item);
+      this.$emit('select-item', this.cart_details);
     },
     goToProductDetail() {
-      this.$router.push({ path: `/product/${this.item.product.product_id}` });
+      this.$router.push({ path: `/product/${this.cart_details.product.product_id}` });
     }
   }
 };

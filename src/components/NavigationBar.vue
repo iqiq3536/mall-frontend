@@ -24,14 +24,14 @@
     <div class="navbar-right">
       <ul class="navbar-list">
         <li class="navbar-item">
-          <router-link to="/cart" class="navbar-link">购物车</router-link>
+          <router-link to="/MyCarts" class="navbar-link">购物车</router-link>
           <ul class="dropdown">
             <li><router-link to="/cart/view" class="dropdown-link">查看购物车</router-link></li>
-            <li><router-link to="/cart/checkout" class="dropdown-link">结算</router-link></li>
+            <!--<li><router-link to="/cart/checkout" class="dropdown-link">结算</router-link></li>-->
           </ul>
         </li>
         <li class="navbar-item">
-          <router-link to="/orders" class="navbar-link">我的订单</router-link>
+          <router-link to="/user_order_list" class="navbar-link">我的订单</router-link>
           <ul class="dropdown">
             <li><router-link to="/orders/history" class="dropdown-link">订单历史</router-link></li>
             <li><router-link to="/orders/track" class="dropdown-link">订单追踪</router-link></li>

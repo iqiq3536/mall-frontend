@@ -29,14 +29,16 @@
         <td>{{ orderDetail.order_detail_status }}</td>
         <td>
           <button
-              v-if="orderDetail.order_detail_status !== '未支付'"
               @click="requestRefund(orderDetail.order_detail_id)"
+              :disabled="orderDetail.order_detail_status !== '已支付'"
+              :style="{ opacity: orderDetail.order_detail_status !== '已支付' ? 0.5 : 1 }"
           >
             申请退款
           </button>
           <button
-              v-if="orderDetail.order_detail_status === '已支付' && orderDetail.shipping_status !== '未发货'"
               @click="signReceipt(orderDetail.order_detail_id)"
+              :disabled="!(orderDetail.order_detail_status === '已支付' && orderDetail.shipping_status === '运输中')"
+              :style="{ opacity: !(orderDetail.order_detail_status === '已支付' && orderDetail.shipping_status === '运输中') ? 0.5 : 1 }"
           >
             签收
           </button>
@@ -54,6 +56,22 @@ export default {
   data() {
     return {
       order_details_list: [],
+      orderDetail:{
+        order_detail_id:"",
+        order_id:"",
+        product_id:"",
+        quantity:"",
+        unit_price:"",
+        total_price:"",
+        create_at:"",
+        order_detail_status:"",
+        shipping_status:"",
+        last_update_at:"",
+        merchant_id:"",
+        user_id:"",
+        shipping_address:"",
+        orderNo:""
+      }
     };
   },
   created() {
@@ -61,10 +79,12 @@ export default {
   },
   methods: {
     fetchOrderDetails() {
-      const orderId = this.$route.params.orderId;
-      axios.get(`http://localhost:8081/api/order_details/getOrders_details_list/${orderId}`)
-          .then(response => {
-            this.order_details_list = response.data.order_details_list;
+      const orderId = this.$route.query.orderId;
+      axios.get(`http://localhost:8081/api/order_details/getOrder_details_list`,{params: {
+          order_id: orderId
+        }
+      }).then(response => {
+            this.order_details_list = response.data.map(orderDetail=>({...orderDetail}));
             this.order_details_list.forEach((orderDetail) => {
               this.fetchProductInfo(orderDetail.product_id, orderDetail);
             });
@@ -74,7 +94,11 @@ export default {
           });
     },
     fetchProductInfo(productId, orderDetail) {
-      axios.get(`http://localhost:8081/api/get_product/${productId}`)
+      const orderId = this.$route.query.orderId;
+      axios.get(`http://localhost:8081/api/get_product}`,{params: {
+          order_id: orderId
+        }
+      })
           .then(response => {
             orderDetail.name = response.data.name;
             orderDetail.img_url = response.data.img_url;
@@ -85,7 +109,8 @@ export default {
     },
     requestRefund(orderDetailId) {
       if (confirm('确认申请退款吗？')) {
-        axios.put(`http://localhost:8081/api/order_details/update_Onepaystatus`, {
+        console.log(orderDetailId);
+        axios.put('http://localhost:8081/api/order_details/update_Onepaystatus', {
           order_detail_status: '申请退款',
           order_detail_id: orderDetailId
         }).then(() => {
