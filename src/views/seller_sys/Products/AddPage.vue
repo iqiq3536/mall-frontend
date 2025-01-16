@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="top-bar">
-      <button @click="clk">测试</button>
       <a href="http://localhost:8082/ProductAdd">添加产品</a>
       <a href="http://localhost:8082/ProductList">产品列表</a>
       <a href="http://localhost:8082/ProductTagList">产品标签列表</a>
