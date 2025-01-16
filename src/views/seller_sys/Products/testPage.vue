@@ -1,4 +1,28 @@
 <template>
+  <div>
+  <nav class="navbar">
+    <div class="navbar-left">
+      <ul class="navbar-list">
+        <li class="navbar-item">
+          <router-link to="/adminControl" class="navbar-link">用户管理</router-link>
+        </li>
+        <li class="navbar-item">
+          <router-link to="/sellerControl" class="navbar-link">商家管理</router-link>
+        </li>
+      </ul>
+    </div>
+    <div class="navbar-right">
+      <ul class="navbar-list">
+        <li class="navbar-item">
+          <router-link to="/ProductExam" class="navbar-link">商品管理</router-link>
+        </li>
+        <li class="navbar-item">
+          <router-link to="" class="navbar-link">我的</router-link>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <main class="content">
   <div class="product-list-container">
     <h1>商品列表</h1>
     <table class="product-table">
@@ -56,6 +80,8 @@
       </tbody>
     </table>
   </div>
+  </main>
+  </div>
 </template>
 
 <script>
@@ -108,6 +134,47 @@ export default {
 </script>
 
 <style>
+.navbar {
+  background-color: #f7f7f7;  /* 添加淡灰色背景 */
+  width: 100%;  /* 使导航栏占满整个屏幕 */
+  padding: 10px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.navbar-left,
+.navbar-right {
+  display: flex;
+}
+
+.navbar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+}
+
+.navbar-item {
+  margin: 0 20px;
+  position: relative; /* 为下拉菜单做定位 */
+}
+
+.navbar-link {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+.navbar-link:hover {
+  color: #f90;
+}
+
+.navbar-right .navbar-item {
+  margin-left: 30px;
+}
 .product-list-container {
   max-width: 1200px;
   margin: 0 auto;
