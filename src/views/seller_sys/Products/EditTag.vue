@@ -82,7 +82,7 @@ export default {
       axios.post(`http://localhost:8081/api/products/tags/add/${productId}`,{ name: this.products[index].newTagName }, {withCredentials: true}).then(response => {
         if(response.data){
           this.products[index].tags.push(response.data);
-          this.products[index].newTagName = ''; // Clear the new tag name after adding
+          this.products[index].newTagName = '';
         }
       });
     },
@@ -92,10 +92,71 @@ export default {
 
 <style>
 .product-item {
+  border: 1px solid #ddd;
+  padding: 15px;
   margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .product-item img {
-  width: 100px;
-  height: 100px;
+  width: 150px; /* 增加图片宽度 */
+  height: auto; /* 保持图片比例 */
+  border-radius: 4px; /* 圆角图片 */
+  margin-bottom: 15px;
+}
+
+.product-item h3 {
+  margin: 10px 0;
+  font-size: 1.5em;
+}
+
+.product-item p {
+  margin: 5px 0;
+}
+
+.product-item input[type="text"],
+.product-item select {
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box; /* 防止输入框超出容器宽度 */
+}
+
+.product-item input[type="text"]:focus,
+.product-item select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.product-item div {
+  margin-top: 10px;
+}
+
+.product-item span {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.product-item button {
+  padding: 8px 15px;
+  margin-left: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.product-item button:hover {
+  background-color: #0056b3;
+}
+
+.product-item button:active {
+  background-color: #004494;
 }
 </style>
+

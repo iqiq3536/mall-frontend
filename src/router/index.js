@@ -54,10 +54,9 @@ const routes = [
         meta: { requiresAuth: true }
     },
     {
-
         path: "/adminLogin",
         name: "adminLogin",
-        component: () => import("@/views/admin/adminLogin.vue"),
+        component: () => import("@/views/login/adminLoginPage.vue"),
     },
     {
 
@@ -110,22 +109,22 @@ const routes = [
     },
     {
         path: '/ProductAdd',
-        name: 'ImgOut',
+        name: 'ProductAdd',
         component: () => import('@/views/seller_sys/Products/AddPage.vue'),
     },
     {
-        path: '/ProductEdit',
+        path: '/ProductList',
         name: 'TestList',
         component: () => import('@/views/seller_sys/Products/SearchEditDeletePage.vue'),
     },
     {
-        path: '/ProductTest',
-        name: 'Test2',
+        path: '/ProductExam',
+        name: 'ProductExam',
         component: () => import('@/views/seller_sys/Products/testPage.vue')
     },
     {
         path: '/ProductTagEdit',
-        name: 'Test3',
+        name: 'ProductTagEdit',
         component: () => import('@/views/seller_sys/Products/EditTag.vue')
     },
     {

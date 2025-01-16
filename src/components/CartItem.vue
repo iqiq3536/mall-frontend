@@ -12,7 +12,7 @@
     <td>
       <input type="number" :checked="item.quantity" @blur="updateQuantity" min="1" />
     </td>
-    <td>{{ item.creat_data }}</td>
+    <td>{{ item.create_data }}</td>
     <td>
       <button @click="deleteItem">删除</button>
     </td>

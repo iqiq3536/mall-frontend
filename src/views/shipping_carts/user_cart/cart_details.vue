@@ -65,11 +65,14 @@ export default {
     }
   },
   methods: {
+    creatCart(){
+      axios.post('http://localhost:8081/api/InsertShopping_carts',{withCredentials: true})
+    },
     fetchCartDetails() {
-      axios.get('http://localhost:8081/api/SelectShopping_carts', {params: {user: 'user'}})
+      axios.get('http://localhost:8081/api/SelectShopping_carts', {withCredentials: true})
           .then(response => {
-            const shopping_carts = response.data;
-            return axios.get('http://localhost:8081/api/get_cart_details_list', {params: {shopping_carts}});
+            const cart_id = response.data;
+            return axios.get('http://localhost:8081/api/get_cart_details_list', {params: {cart_id:cart_id}});
           })
           .then(response => {
             this.cartDetails = response.data.map(detail => {
@@ -78,13 +81,13 @@ export default {
           });
     },
     updateQuantity(item, quantity) {
-      axios.post('http://localhost:8081/api/edit', {...item, quantity})
+      axios.put('http://localhost:8081/api/edit', {cart_details_id:item.cart_details_id, quantity:quantity})
           .then(() => {
             item.quantity = quantity;
           });
     },
     deleteItem(item) {
-      axios.post('http://localhost:8081/api/deleteOne', {cart_details_id: item.cart_details_id})
+      axios.delete('http://localhost:8081/api/deleteOne', {cart_details_id: item.cart_details_id})
           .then(() => {
             this.cartDetails = this.cartDetails.filter(i => i.cart_details_id !== item.cart_details_id);
           });
@@ -98,9 +101,13 @@ export default {
       });
     },
     clearAll() {
-      axios.post('http://localhost:8081/api/deleteAll', {shopping_carts: 'shopping_carts'})
-          .then(() => {
-            this.cartDetails = [];
+      axios.get('http://localhost:8081/api/SelectShopping_carts', {withCredentials: true})
+          .then(response => {
+            const cart_id = response.data;
+            axios.delete('http://localhost:8081/api/deleteAll', {params: {cart_id:cart_id}})
+                .then(() => {
+                  this.cartDetails = [];
+                });
           });
     },
     order() {
@@ -109,10 +116,10 @@ export default {
       // 计算总金额
       const totalAmount = this.totalAmount;
       // 获取用户ID (假设 user_id 已通过某种方式获得)
-      const userId = 123; // 替换为实际的 user_id
+      //const userId = 123; // 替换为实际的 user_id
       // 第一步：创建订单
       axios.post('http://localhost:8081/api/orders/insertOrders', {
-        user_id: userId,
+        withCredentials: true,
         total_amount: totalAmount
       }).then(response => {
         const orderId = response.data.order_id;
@@ -123,16 +130,16 @@ export default {
           // 构建订单详情对象
           const orderDetails = {
             order_id: orderId,
-            user_id:userId,
             product_id: item.product_id,
             quantity: item.quantity,
             unit_price: item.unit_price,
             total_price: totalPrice,
             merchant_id: item.merchant_id
           };
-
+          //从购物车中删除所选商品
+          this.deleteItem(item);
           // 提交订单详情
-          return axios.post('http://localhost:8081/api/orders/insert_one', orderDetails);
+          return axios.post('http://localhost:8081/api/orders/insert_one', orderDetails,{withCredentials: true});
         });
 
         // 等待所有订单详情提交成功

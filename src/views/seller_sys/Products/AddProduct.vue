@@ -1,26 +1,46 @@
 <template>
-  <div>
-    <input type="text" v-model="product.name" placeholder="Product Name" />
-    <input type="text" v-model="product.description" placeholder="Product Description" />
-    <select v-model="product.category">
-      <option disabled value="">Please select one</option>
-      <option value="flower">Flower</option>
-      <option value="bird">Bird</option>
-      <option value="fish">Fish</option>
-      <option value="pet">Pet</option>
-      <option value="insect">Insect</option>
-    </select>
-    <input type="text" v-model="product.price" placeholder="Product price" />
-    <input type="text" v-model="product.stock" placeholder="Product stock" />
-    <input type="file" @change="handleFileChange" />
-    <button @click="uploadImage">上传图片</button>
-    <button @click="confirmUpload" :disabled="!product.img_url">确认上传商品信息</button>
-    <div v-if="previewImage">
-      <img :src="previewImage" alt="预览图片" class="preview-image" />
+  <div class="product-form-container">
+    <h2>添加商品</h2>
+    <div class="form-group">
+      <label for="productName">商品名称</label>
+      <input type="text" v-model="product.name" placeholder="Product Name" id="productName" class="form-input">
+    </div>
+    <div class="form-group">
+      <label for="productDescription">商品描述</label>
+      <input type="text" v-model="product.description" placeholder="Product Description" id="productDescription" class="form-input">
+    </div>
+    <div class="form-group">
+      <label for="productCategory">商品分类</label>
+      <select v-model="product.category" id="productCategory" class="form-input">
+        <option disabled value="">请选择一个分类</option>
+        <option value="flower">Flower</option>
+        <option value="bird">Bird</option>
+        <option value="fish">Fish</option>
+        <option value="pet">Pet</option>
+        <option value="insect">Insect</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="productPrice">商品价格</label>
+      <input type="text" v-model="product.price" placeholder="Product Price" id="productPrice" class="form-input">
+    </div>
+    <div class="form-group">
+      <label for="productStock">商品库存</label>
+      <input type="text" v-model="product.stock" placeholder="Product Stock" id="productStock" class="form-input">
+    </div>
+    <div class="form-group">
+      <label for="productImage">商品图片</label>
+      <input type="file" @change="handleFileChange" id="productImage" class="form-input">
+    </div>
+    <div class="form-group">
+      <button @click="uploadImage" class="form-button">上传图片</button>
+      <button @click="confirmUpload" :disabled="!product.img_url" class="form-button">确认上传商品信息</button>
+    </div>
+    <div v-if="previewImage" class="preview-image-container">
+      <img :src="previewImage" alt="预览图片" class="preview-image">
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 
@@ -80,9 +100,66 @@ export default {
 </script>
 
 <style>
+.product-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.product-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.form-button {
+  padding: 10px 20px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.form-button:hover {
+  background-color: #0056b3;
+}
+
+.form-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.preview-image-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
 .preview-image {
   max-width: 100%;
   height: auto;
-  margin-top: 20px;
+  border-radius: 4px;
 }
 </style>
