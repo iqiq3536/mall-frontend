@@ -119,6 +119,26 @@ const routes = [
         name: 'Test3',
         component: () => import('@/views/seller_sys/Products/EditTag.vue')
     },
+    {
+        path: '/MyCarts',
+        name: 'MyCarts',
+        component: () => import('@/views/shipping_carts/user_cart/cart_details.vue')
+    },
+    {
+        path: '/userPayment',
+        name: 'userPayment',
+        component: () => import('@/views/order/user_order/user_payment.vue')
+    },
+    {
+        path: '/user_order_list',
+        name: 'user_order_list',
+        component: () => import('@/views/order/user_order/user_order_list.vue')
+    },
+    {
+        path: '/user_order_details_list',
+        name: 'user_order_details_list',
+        component: () => import('@/views/order/user_order/user_order_details_list.vue')
+    }
 ];
 
 
