@@ -11,7 +11,11 @@
         </li>
         <!-- 如果有userId，则显示“我的”，否则显示登录/注册 -->
         <li class="navbar-item" v-if="userId">
-          <router-link to="/user" class="navbar-link">我的</router-link>
+          <router-link to="/user" class="navbar-link">用户</router-link>
+          <ul class="dropdown">
+            <li><router-link to="/user/profile" class="dropdown-link">个人信息</router-link></li>
+            <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
+          </ul>
         </li>
         <li class="navbar-item" v-else>
           <span>您好，请 <a :href="loginLink" class="login-link">登录</a> 或 <a :href="registerLink" class="register-link">注册</a></span>
