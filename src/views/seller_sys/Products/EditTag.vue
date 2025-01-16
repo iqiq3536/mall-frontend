@@ -31,7 +31,7 @@
       </p>
       <div>
         <div v-for="(tag) in product.tags" :key="tag.id">
-          <span>{{ tag.name }}</span>
+          <span>{{ tag.tag_name }}</span>
           <button @click="removeTag(product.id, tag.id, index)">Remove</button>
         </div>
         <input type="text" v-model="product.newTagName" placeholder="New tag name" />
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       products: [],
-      newTag: { name: '' },
+      newTag: { tag_name: '' },
     };
   },
   created() {
@@ -59,14 +59,13 @@ export default {
       axios.get('http://localhost:8081/api/products/list', {withCredentials: true}).then(response => {
         this.products = response.data.map(product => ({
           ...product,
-          newTagName: '', // Add a new property for each product to hold the new tag name
+          newTagName: '',
           tags: [],
         }));
         this.fetchTagsForProducts();
       });
     },
     fetchTagsForProducts() {
-      console.log("1222")
       this.products.forEach(product => {
         axios.get(`http://localhost:8081/api/products/tags/${product.id}`, {withCredentials: true}).then(response => {
           product.tags = response.data;
@@ -79,7 +78,8 @@ export default {
       });
     },
     addTag(productId, index) {
-      axios.post(`http://localhost:8081/api/products/tags/add/${productId}`,{ name: this.products[index].newTagName }, {withCredentials: true}).then(response => {
+      console.log(this.products[index].newTagName);
+      axios.post(`http://localhost:8081/api/products/tags/add/${productId}`,{ tag_name: this.products[index].newTagName }, {withCredentials: true}).then(response => {
         if(response.data){
           this.products[index].tags.push(response.data);
           this.products[index].newTagName = '';

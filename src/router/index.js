@@ -123,8 +123,8 @@ const routes = [
         component: () => import('@/views/seller_sys/Products/testPage.vue')
     },
     {
-        path: '/ProductTagEdit',
-        name: 'ProductTagEdit',
+        path: '/ProductTagList',
+        name: 'ProductTagList',
         component: () => import('@/views/seller_sys/Products/EditTag.vue')
     },
     {
