@@ -47,16 +47,15 @@ export default {
       });
     },
     login() {
-      axios.post('http://localhost:8081/api/login_user', {
+      axios.post('http://localhost:8081/api/login_user',{
         username: this.loginForm.username,
         password: this.loginForm.password
       }, {
         withCredentials: true
-      })
+      }
+      )
           .then(response => {
             if (response.data.success) {
-              // 登录成功后存入user_id到Cookie
-              this.setCookie('user_id', response.data.user_id, 7); // 保存user_id，7天有效期
               this.$router.push({ name: 'MallHomePage' });
             } else {
               this.$message.error('登录失败：' + response.data.message);
@@ -66,12 +65,6 @@ export default {
             console.error('登录请求失败：', error);
             this.$message.error('登录请求失败，请稍后再试！');
           });
-    },
-    setCookie(name, value, days) {
-      let date = new Date();
-      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // 设置过期时间
-      let expires = "expires=" + date.toUTCString();
-      document.cookie = name + "=" + value + ";" + expires + ";path=/"; // 设置Cookie
     }
   }
 };
@@ -111,4 +104,3 @@ export default {
   margin-top: 20px;
 }
 </style>
-
