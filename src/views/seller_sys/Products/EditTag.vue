@@ -1,5 +1,12 @@
 <template>
+
   <div>
+    <div class="top-bar">
+      <a href="http://localhost:8082/ProductAdd">添加产品</a>
+      <a href="http://localhost:8082/ProductList">产品列表</a>
+      <a href="http://localhost:8082/ProductTagList">产品标签列表</a>
+      <span class="merchant-name">{{this.merchantName}}</span>
+    </div>
     <h1>商品列表</h1>
     <div v-for="(product, index) in products" :key="product.id" class="product-item">
       <img :src="'http://localhost:8081/api/images/' + product.img_url" alt="图片描述">
@@ -49,12 +56,20 @@ export default {
     return {
       products: [],
       newTag: { tag_name: '' },
+      merchantName: '',
     };
   },
   created() {
     this.fetchProducts();
+    this.fetchMerchantName();
   },
   methods: {
+    fetchMerchantName() {
+      axios.get('http://localhost:8081/api/merchants_name', {withCredentials: true}).then(response => {
+        this.merchantName = response.data;
+        console.log(this.merchantName);
+      });
+    },
     fetchProducts() {
       axios.get('http://localhost:8081/api/products/list', {withCredentials: true}).then(response => {
         this.products = response.data.map(product => ({
@@ -157,6 +172,33 @@ export default {
 
 .product-item button:active {
   background-color: #004494;
+}
+
+.top-bar {
+  display: flex;
+  background-color: #9a9a9a;
+  overflow: hidden;
+}
+
+.top-bar a {
+  float: left;
+  display: block;
+  color: #000000;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.top-bar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.merchant-name {
+  margin-left: auto; /* 将商户名称推到最右侧 */
+  padding: 14px 16px;
+  color: white;
+  text-decoration: none;
 }
 </style>
 

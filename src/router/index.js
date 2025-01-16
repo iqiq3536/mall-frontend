@@ -118,14 +118,14 @@ const routes = [
         component: () => import('@/views/seller_sys/Products/SearchEditDeletePage.vue'),
     },
     {
-        path: '/ProductExam',
-        name: 'ProductExam',
-        component: () => import('@/views/seller_sys/Products/testPage.vue')
-    },
-    {
         path: '/ProductTagList',
         name: 'ProductTagList',
         component: () => import('@/views/seller_sys/Products/EditTag.vue')
+    },
+    {
+        path: '/ProductExam',
+        name: 'ProductExam',
+        component: () => import('@/views/seller_sys/Products/testPage.vue')
     },
     {
         path: '/MyCarts',

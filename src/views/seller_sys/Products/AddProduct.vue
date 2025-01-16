@@ -59,7 +59,16 @@ export default {
       previewImage: null,
     };
   },
+  created() {
+    this.fetchMerchantName();
+  },
   methods: {
+    fetchMerchantName() {
+      axios.get('http://localhost:8081/api/merchants_name', {withCredentials: true}).then(response => {
+        this.merchantName = response.data;
+        console.log(this.merchantName);
+      });
+    },
     handleFileChange(event) {
       const file = event.target.files[0];
       if (file) {
@@ -161,5 +170,31 @@ export default {
   max-width: 100%;
   height: auto;
   border-radius: 4px;
+}
+.top-bar {
+  display: flex;
+  background-color: #9a9a9a;
+  overflow: hidden;
+}
+
+.top-bar a {
+  float: left;
+  display: block;
+  color: #000000;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.top-bar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.merchant-name {
+  margin-left: auto; /* 将商户名称推到最右侧 */
+  padding: 14px 16px;
+  color: white;
+  text-decoration: none;
 }
 </style>
