@@ -9,12 +9,9 @@
             <li><router-link to="/home/popular" class="dropdown-link">热销</router-link></li>
           </ul>
         </li>
+        <!-- 如果有userId，则显示“我的”，否则显示登录/注册 -->
         <li class="navbar-item" v-if="userId">
-          <router-link to="/user" class="navbar-link">用户</router-link>
-          <ul class="dropdown">
-            <li><router-link to="/user/profile" class="dropdown-link">个人信息</router-link></li>
-            <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
-          </ul>
+          <router-link to="/user" class="navbar-link">我的</router-link>
         </li>
         <li class="navbar-item" v-else>
           <span>您好，请 <a :href="loginLink" class="login-link">登录</a> 或 <a :href="registerLink" class="register-link">注册</a></span>
@@ -23,6 +20,7 @@
     </div>
     <div class="navbar-right">
       <ul class="navbar-list">
+        <button @click="clk">测试</button>
         <li class="navbar-item">
           <router-link to="/cart" class="navbar-link">购物车</router-link>
           <ul class="dropdown">
@@ -48,29 +46,40 @@
     </div>
   </nav>
 </template>
-
-
 <script>
 export default {
   name: 'NavigationBar',
   data() {
     return {
-      userId: this.getCookie('user_id'),  // 获取cookie中的user_id
-      loginLink: 'userLogin',   // 替换为您的登录链接
-      registerLink: 'userRegister'  // 替换为您的注册链接
+      userId: '123',  // 获取cookie中的user_id
+      loginLink: '/userLogin',   // 登录链接
+      registerLink: '/userRegister'  // 注册链接
     };
   },
   methods: {
+    clk() {console.log(this.userId)},
     // 获取 cookie 中的值
     getCookie(name) {
+      if (typeof document === 'undefined') { // 检查是否在客户端环境中
+        return null;
+      }
       let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      if (match) return match[2];
+      if (match) return decodeURIComponent(match[2]); // 解码可能被编码的cookie值
       return null;
     }
+  },
+  watch: {
+    userId(newValue) {
+      if (newValue) {
+        // 可以在这里添加额外的逻辑，比如刷新某些数据或通知用户
+      }
+    }
+  },
+  mounted() { // 在组件挂载后再次尝试获取cookie，确保DOM已经完全加载
+    this.userId = this.getCookie('user_id');
   }
 };
 </script>
-
 <style scoped>
 .navbar {
   background-color: #f7f7f7;  /* 添加淡灰色背景 */

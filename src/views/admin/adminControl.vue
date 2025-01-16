@@ -40,13 +40,13 @@
           </thead>
           <tbody>
           <tr v-for="(user, index) in users" :key="index">
-            <td>{{ user.user_id }}</td> <!-- 假设用户ID的属性名是 user_id -->
-            <td>{{ user.username }}</td> <!-- 假设用户名的属性名是 username -->
+            <td>{{ user.user_id }}</td>
+            <td>{{ user.username }}</td>
             <td>{{ user.password }}</td>
-            <td>{{ user.full_name }}</td> <!-- 假设姓名的属性名是 name -->
-            <td>{{ user.gender }}</td> <!-- 假设性别的属性名是 gender -->
-            <td>{{ user.contact_info }}</td> <!-- 假设联系方式的属性名是 contact -->
-            <td>{{ user.family_id }}</td><!-- 注意：家庭ID这一列可能需要根据您的实际数据模型进行调整 -->
+            <td>{{ user.full_name }}</td>
+            <td>{{ user.gender }}</td>
+            <td>{{ user.contact_info }}</td>
+            <td>{{ user.family_id }}</td>
             <td>{{ user.family_name }}</td>
             <td>
               <button @click="openEditModal(user)">修改</button>
