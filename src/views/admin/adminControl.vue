@@ -14,7 +14,7 @@
     <div class="navbar-right">
       <ul class="navbar-list">
         <li class="navbar-item">
-          <router-link to="/cart" class="navbar-link">商品管理</router-link>
+          <router-link to="/ProductExam" class="navbar-link">商品管理</router-link>
         </li>
         <li class="navbar-item">
           <router-link to="" class="navbar-link">我的</router-link>
@@ -29,6 +29,7 @@
           <tr>
             <th>用户ID</th>
             <th>用户名</th>
+            <th>密码</th>
             <th>姓名</th>
             <th>性别</th>
             <th>联系方式</th>
@@ -41,6 +42,7 @@
           <tr v-for="(user, index) in users" :key="index">
             <td>{{ user.user_id }}</td> <!-- 假设用户ID的属性名是 user_id -->
             <td>{{ user.username }}</td> <!-- 假设用户名的属性名是 username -->
+            <td>{{ user.password }}</td>
             <td>{{ user.full_name }}</td> <!-- 假设姓名的属性名是 name -->
             <td>{{ user.gender }}</td> <!-- 假设性别的属性名是 gender -->
             <td>{{ user.contact_info }}</td> <!-- 假设联系方式的属性名是 contact -->
