@@ -5,6 +5,7 @@
       <a href="http://localhost:8082/ProductAdd">添加产品</a>
       <a href="http://localhost:8082/ProductList">产品列表</a>
       <a href="http://localhost:8082/ProductTagList">产品标签列表</a>
+      <a href="http://localhost:8082/merchant_order_details_list">订单信息</a>
       <span class="merchant-name">{{this.merchantName}}</span>
     </div>
     <h1>商品列表</h1>

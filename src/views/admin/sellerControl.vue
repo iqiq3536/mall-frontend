@@ -16,9 +16,6 @@
           <li class="navbar-item">
             <router-link to="/ProductExam" class="navbar-link">商品管理</router-link>
           </li>
-          <li class="navbar-item">
-            <router-link to="" class="navbar-link">我的</router-link>
-          </li>
         </ul>
       </div>
     </nav>
