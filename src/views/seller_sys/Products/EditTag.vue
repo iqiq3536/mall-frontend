@@ -1,5 +1,12 @@
 <template>
+
   <div>
+    <div class="top-bar">
+      <a href="http://localhost:8082/ProductAdd">添加产品</a>
+      <a href="http://localhost:8082/ProductList">产品列表</a>
+      <a href="http://localhost:8082/ProductTagList">产品标签列表</a>
+      <span class="merchant-name">{{this.merchantName}}</span>
+    </div>
     <h1>商品列表</h1>
     <div v-for="(product, index) in products" :key="product.id" class="product-item">
       <img :src="'http://localhost:8081/api/images/' + product.img_url" alt="图片描述">
@@ -31,7 +38,7 @@
       </p>
       <div>
         <div v-for="(tag) in product.tags" :key="tag.id">
-          <span>{{ tag.name }}</span>
+          <span>{{ tag.tag_name }}</span>
           <button @click="removeTag(product.id, tag.id, index)">Remove</button>
         </div>
         <input type="text" v-model="product.newTagName" placeholder="New tag name" />
@@ -48,25 +55,32 @@ export default {
   data() {
     return {
       products: [],
-      newTag: { name: '' },
+      newTag: { tag_name: '' },
+      merchantName: '',
     };
   },
   created() {
     this.fetchProducts();
+    this.fetchMerchantName();
   },
   methods: {
+    fetchMerchantName() {
+      axios.get('http://localhost:8081/api/merchants_name', {withCredentials: true}).then(response => {
+        this.merchantName = response.data;
+        console.log(this.merchantName);
+      });
+    },
     fetchProducts() {
       axios.get('http://localhost:8081/api/products/list', {withCredentials: true}).then(response => {
         this.products = response.data.map(product => ({
           ...product,
-          newTagName: '', // Add a new property for each product to hold the new tag name
+          newTagName: '',
           tags: [],
         }));
         this.fetchTagsForProducts();
       });
     },
     fetchTagsForProducts() {
-      console.log("1222")
       this.products.forEach(product => {
         axios.get(`http://localhost:8081/api/products/tags/${product.id}`, {withCredentials: true}).then(response => {
           product.tags = response.data;
@@ -79,7 +93,8 @@ export default {
       });
     },
     addTag(productId, index) {
-      axios.post(`http://localhost:8081/api/products/tags/add/${productId}`,{ name: this.products[index].newTagName }, {withCredentials: true}).then(response => {
+      console.log(this.products[index].newTagName);
+      axios.post(`http://localhost:8081/api/products/tags/add/${productId}`,{ tag_name: this.products[index].newTagName }, {withCredentials: true}).then(response => {
         if(response.data){
           this.products[index].tags.push(response.data);
           this.products[index].newTagName = '';
@@ -157,6 +172,33 @@ export default {
 
 .product-item button:active {
   background-color: #004494;
+}
+
+.top-bar {
+  display: flex;
+  background-color: #9a9a9a;
+  overflow: hidden;
+}
+
+.top-bar a {
+  float: left;
+  display: block;
+  color: #000000;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.top-bar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.merchant-name {
+  margin-left: auto; /* 将商户名称推到最右侧 */
+  padding: 14px 16px;
+  color: white;
+  text-decoration: none;
 }
 </style>
 

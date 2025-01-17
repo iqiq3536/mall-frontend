@@ -60,8 +60,8 @@ const routes = [
     },
     {
 
-        path: "/sellerLogin",
-        name: "sellerLogin",
+        path: "/sellerControl",
+        name: "sellerControl",
         component: () => import("@/views/admin/sellerControl.vue"),
     },
     {
@@ -118,14 +118,14 @@ const routes = [
         component: () => import('@/views/seller_sys/Products/SearchEditDeletePage.vue'),
     },
     {
+        path: '/ProductTagList',
+        name: 'ProductTagList',
+        component: () => import('@/views/seller_sys/Products/EditTag.vue')
+    },
+    {
         path: '/ProductExam',
         name: 'ProductExam',
         component: () => import('@/views/seller_sys/Products/testPage.vue')
-    },
-    {
-        path: '/ProductTagEdit',
-        name: 'ProductTagEdit',
-        component: () => import('@/views/seller_sys/Products/EditTag.vue')
     },
     {
         path: '/MyCarts',
@@ -163,7 +163,13 @@ const routes = [
     {
         path: '/adminLogin',
         name: 'adminLoginPage',
-        component: adminLoginPage,}
+        component: adminLoginPage,
+    },
+    {
+        path: '/merchantorder',
+        name: 'merchantorder',
+        component: () => import('@/views/order/merchant_order/merchant_order_details_list.vue'),
+    },
 ];
 
 

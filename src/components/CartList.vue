@@ -1,10 +1,9 @@
 <template>
   <div>
     <CartItem
-        v-for="item in cartDetails"
-        :key="item.cart_details_id"
-        :item="item"
-        :selected="item.selected"
+        v-for="cart_details in cartDetails"
+        :key="cart_details.cart_details_id"
+        :selected="cart_details.selected"
         @update-quantity="updateQuantity"
         @delete-item="deleteItem"
         @select-item="selectItem"
@@ -21,14 +20,14 @@ export default {
   },
   props: ['cartDetails'],
   methods: {
-    updateQuantity(item, quantity) {
-      this.$emit('update-quantity', item, quantity);
+    updateQuantity(cart_details, quantity) {
+      this.$emit('update-quantity', cart_details, quantity);
     },
-    deleteItem(item) {
-      this.$emit('delete-item', item);
+    deleteItem(cart_details) {
+      this.$emit('delete-item', cart_details);
     },
-    selectItem(item) {
-      this.$emit('select-item', item);
+    selectItem(cart_details) {
+      this.$emit('select-item', cart_details);
     }
   }
 };

@@ -9,8 +9,8 @@
             <li><router-link to="/home/popular" class="dropdown-link">热销</router-link></li>
           </ul>
         </li>
-        <li class="navbar-item" v-if="userId">
-          <router-link to="/user" class="navbar-link">用户</router-link>
+        <li class="navbar-item" v-if="userName_test">
+          <router-link to="/user" class="navbar-link">{{ this.userName_test }}</router-link>
           <ul class="dropdown">
             <li><router-link to="/user/profile" class="dropdown-link">个人信息</router-link></li>
             <li><router-link to="/user/settings" class="dropdown-link">设置</router-link></li>
@@ -24,14 +24,14 @@
     <div class="navbar-right">
       <ul class="navbar-list">
         <li class="navbar-item">
-          <router-link to="/cart" class="navbar-link">购物车</router-link>
+          <router-link to="/MyCarts" class="navbar-link">购物车</router-link>
           <ul class="dropdown">
             <li><router-link to="/cart/view" class="dropdown-link">查看购物车</router-link></li>
-            <li><router-link to="/cart/checkout" class="dropdown-link">结算</router-link></li>
+            <!--<li><router-link to="/cart/checkout" class="dropdown-link">结算</router-link></li>-->
           </ul>
         </li>
         <li class="navbar-item">
-          <router-link to="/orders" class="navbar-link">我的订单</router-link>
+          <router-link to="/user_order_list" class="navbar-link">我的订单</router-link>
           <ul class="dropdown">
             <li><router-link to="/orders/history" class="dropdown-link">订单历史</router-link></li>
             <li><router-link to="/orders/track" class="dropdown-link">订单追踪</router-link></li>
@@ -51,22 +51,27 @@
 
 
 <script>
+import axios from "axios";
+
 export default {
   name: 'NavigationBar',
   data() {
     return {
-      userId: this.getCookie('user_id'),  // 获取cookie中的user_id
+      userName_test: '',  // 获取cookie中的user_id
       loginLink: 'userLogin',   // 替换为您的登录链接
       registerLink: 'userRegister'  // 替换为您的注册链接
     };
   },
+  created() {
+    this.fetchMerchantName();
+  },
   methods: {
-    // 获取 cookie 中的值
-    getCookie(name) {
-      let match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      if (match) return match[2];
-      return null;
-    }
+    fetchMerchantName() {
+      axios.get('http://localhost:8081/api/users_name', {withCredentials: true}).then(response => {
+        this.userName_test = response.data;
+        console.log(this.userName_test);
+      });
+    },
   }
 };
 </script>

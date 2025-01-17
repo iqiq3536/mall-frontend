@@ -16,13 +16,18 @@
       <tbody>
       <tr v-for="order in orders_list" :key="order.order_id">
         <td>{{ order.order_id }}</td>
-        <td>{{ order.total_cmount }}</td>
-        <td>{{ order.created_at }}</td>
+        <td>{{ order.total_amount }}</td>
+        <td>{{ order.create_at }}</td>
         <td>{{ order.shipping_address }}</td>
-        <td>{{ order.pay_method }}</td>
+        <td>{{ order.payment_method }}</td>
         <td>{{ order.order_status }}</td>
         <td><button @click="viewDetails(order.order_id)">查看详情</button>
-          <button @click="deleteOrder(order.order_id)">删除订单</button>
+          <button
+              @click="Pay(order.order_id, order.total_amount)"
+              :disabled="order.order_status !== '未支付'"
+              :style="{ opacity: order.order_status !== '未支付' ? 0.5 : 1 }">
+            支付订单
+          </button>
         </td>
       </tr>
       </tbody>
@@ -37,9 +42,19 @@ export default {
   data() {
     return {
       orders_list: [],
+      order:{
+        order_id:"",
+        user_id:"",
+        order_status:"",
+        create_at:"",
+        total_amount:"",
+        payment_method:"",
+        shipping_address:""
+      }
     };
   },
-  created() {
+  mounted() {
+    console.log("Component created!");
     this.fetchOrdersList();
   },
   methods: {
@@ -47,14 +62,18 @@ export default {
       //const userId = 1; // 假设用户ID是1
       axios.get(`http://localhost:8081/api/orders/getOrders_list`,{withCredentials: true})
           .then(response => {
-            this.orders_list = response.data.orders_list;
+            console.log("Fetched Orders List:", response.data.orders_list);
+            this.orders_list = response.data.map(order=>({...order}))
           })
           .catch(error => {
             console.error("Error fetching orders list:", error);
           });
     },
     viewDetails(orderId) {
-      this.$router.push({ name: 'orderDetails', params: { orderId } });
+      this.$router.push({ name: 'user_order_details_list', query: { orderId } });
+    },
+    Pay(orderId,total_amount){
+      this.$router.push({ name: 'user_payment', query: { order_id: orderId, total_amount: total_amount } });
     }
   }
 };

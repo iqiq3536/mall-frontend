@@ -18,10 +18,9 @@
       </thead>
       <tbody>
       <CartList
-          v-for="(item, index) in cartDetails"
-          :key="index"
-          :item="item"
-          :selected="item.selected"
+          v-for="cart_details in cartDetails"
+          :key="cart_details.cart_details_id"
+          :selected="cart_details.selected"
           @update-quantity="updateQuantity"
           @delete-item="deleteItem"
           @select-item="selectItem"
@@ -51,16 +50,26 @@ export default {
   data() {
     return {
       cartDetails: [],
+      cart_details:{
+        cart_details_id:"",
+        cart_id:"",
+        product_id:"",
+        quantity:"",
+        unit_price:"",
+        create_data:"",
+        merchant_id:"",
+        selected:""
+      },
       allSelected: false
     };
   },
   computed: {
     selectedCount() {
-      return this.cartDetails.filter(item => item.selected).length;
+      return this.cartDetails.filter(cart_details => cart_details.selected).length;
     },
     totalAmount() {
-      return this.cartDetails.reduce((total, item) => {
-        return item.selected ? total + (item.unit_price * item.quantity) : total;
+      return this.cartDetails.reduce((total, cart_details) => {
+        return cart_details.selected ? total + (cart_details.unit_price * cart_details.quantity) : total;
       }, 0);
     }
   },
@@ -75,29 +84,29 @@ export default {
             return axios.get('http://localhost:8081/api/get_cart_details_list', {params: {cart_id:cart_id}});
           })
           .then(response => {
-            this.cartDetails = response.data.map(detail => {
-              return {...detail, selected: false};
+            this.cartDetails = response.data.map(cart_details => {
+              return {...cart_details, selected: false};
             });
           });
     },
-    updateQuantity(item, quantity) {
-      axios.put('http://localhost:8081/api/edit', {cart_details_id:item.cart_details_id, quantity:quantity})
+    updateQuantity(cart_details, quantity) {
+      axios.put('http://localhost:8081/api/edit', {cart_details_id:cart_details.cart_details_id, quantity:quantity})
           .then(() => {
-            item.quantity = quantity;
+            cart_details.quantity = quantity;
           });
     },
-    deleteItem(item) {
-      axios.delete('http://localhost:8081/api/deleteOne', {cart_details_id: item.cart_details_id})
+    deleteItem(cart_details) {
+      axios.delete('http://localhost:8081/api/deleteOne', {cart_details_id: cart_details.cart_details_id})
           .then(() => {
-            this.cartDetails = this.cartDetails.filter(i => i.cart_details_id !== item.cart_details_id);
+            this.cartDetails = this.cartDetails.filter(i => i.cart_details_id !== cart_details.cart_details_id);
           });
     },
-    selectItem(item) {
-      item.selected = !item.selected;
+    selectItem(cart_details) {
+      cart_details.selected = !cart_details.selected;
     },
     toggleAllSelection() {
-      this.cartDetails.forEach(item => {
-        item.selected = this.allSelected;
+      this.cartDetails.forEach(cart_details => {
+        cart_details.selected = this.allSelected;
       });
     },
     clearAll() {
@@ -112,7 +121,7 @@ export default {
     },
     order() {
       // 获取已选中的商品
-      const selectedItems = this.cartDetails.filter(item => item.selected);
+      const selectedItems = this.cartDetails.filter(cart_details => cart_details.selected);
       // 计算总金额
       const totalAmount = this.totalAmount;
       // 获取用户ID (假设 user_id 已通过某种方式获得)
@@ -124,20 +133,20 @@ export default {
       }).then(response => {
         const orderId = response.data.order_id;
         // 第二步：提交订单详情
-        const orderDetailsPromises = selectedItems.map(item => {
-          const totalPrice = item.unit_price * item.quantity;
+        const orderDetailsPromises = selectedItems.map(cart_details => {
+          const totalPrice = cart_details.unit_price * cart_details.quantity;
 
           // 构建订单详情对象
           const orderDetails = {
             order_id: orderId,
-            product_id: item.product_id,
-            quantity: item.quantity,
-            unit_price: item.unit_price,
+            product_id: cart_details.product_id,
+            quantity: cart_details.quantity,
+            unit_price: cart_details.unit_price,
             total_price: totalPrice,
-            merchant_id: item.merchant_id
+            merchant_id: cart_details.merchant_id
           };
           //从购物车中删除所选商品
-          this.deleteItem(item);
+          this.deleteItem(cart_details);
           // 提交订单详情
           return axios.post('http://localhost:8081/api/orders/insert_one', orderDetails,{withCredentials: true});
         });
@@ -155,6 +164,7 @@ export default {
     }
   },
   created() {
+    this.creatCart();
     this.fetchCartDetails();
   }
 };
