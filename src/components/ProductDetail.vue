@@ -6,7 +6,7 @@
     <!-- 按钮区域 -->
     <div class="button-container">
       <el-button type="primary" @click="goBack">返回</el-button>
-      <el-button>加入购物车</el-button>
+      <el-button @click="addToCart">加入购物车</el-button>
       <el-button>购买</el-button>
     </div>
 
@@ -33,6 +33,7 @@
 import DetailsPanel from "@/components/product_details/DetailsPanel.vue";
 import ReviewsPanel from "@/components/product_details/ReviewsPanel.vue";
 import RelatedPanel from "@/components/product_details/RelatedPanel.vue";
+import axios from "axios";
 
 export default {
   components: {
@@ -53,6 +54,24 @@ export default {
   methods: {
     goBack() {
       this.$router.push({ name: "MallHomePage" }); // 跳转回首页
+    },
+    // 添加商品到购物车
+    addToCart() {
+      axios.post("http://localhost:8081/api/cart/SelectShopping_carts",{withCredentials: true})
+          .then(response=>{
+            const cart_id=response.data();
+            axios.post("http://localhost:8081/api/cart_details/insert", {product_id: this.productId,cart_id:cart_id})
+                .then(response => {
+                  // 假设返回成功时的反馈
+                  response;
+                  this.$message.success("已成功加入购物车！");
+                })
+                .catch(error => {
+                  // 失败时的反馈
+                  console.error('加入购物车失败，请稍后再试。', error);
+                  this.$message.error("加入购物车失败，请稍后再试。");
+                });
+      })
     },
   },
 };

@@ -24,9 +24,9 @@
     <div class="navbar-right">
       <ul class="navbar-list">
         <li class="navbar-item">
-          <router-link to="/MyCarts" class="navbar-link">购物车</router-link>
+          <router-link to="/showCarts" class="navbar-link">购物车</router-link>
           <ul class="dropdown">
-            <li><router-link to="/familyCart" class="dropdown-link">家庭购物车</router-link></li>
+            <li><router-link to="/showFamilyCarts" class="dropdown-link">查看家庭购物车</router-link></li>
             <!--<li><router-link to="/cart/checkout" class="dropdown-link">结算</router-link></li>-->
           </ul>
         </li>

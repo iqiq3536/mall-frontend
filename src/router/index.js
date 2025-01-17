@@ -128,9 +128,14 @@ const routes = [
         component: () => import('@/views/seller_sys/Products/testPage.vue')
     },
     {
-        path: '/MyCarts',
-        name: 'MyCarts',
-        component: () => import('@/views/shipping_carts/user_cart/cart_details.vue')
+        path: '/showCarts',
+        name: 'showCarts',
+        component: () => import('@/views/shipping_carts/user_cart/cartDetails.vue')
+    },
+    {
+        path: '/showFamilyCarts',
+        name: 'showFamilyCarts',
+        component: () => import('@/views/shipping_carts/user_cart/familycart.vue')
     },
     {
         path: '/userPayment',
@@ -151,6 +156,11 @@ const routes = [
         path: '/user_order_details_list',
         name: 'user_order_details_list',
         component: () => import('@/views/order/user_order/user_order_details_list.vue')
+    },
+    {
+        path: '/merchant_order_details_list',
+        name: 'merchant_order_details_list',
+        component: () => import('@/views/order/merchant_order/merchant_order_details_list.vue')
     },
     //登录页面
     {
