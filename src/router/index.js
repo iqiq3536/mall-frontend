@@ -143,6 +143,11 @@ const routes = [
         component: () => import('@/views/order/user_order/user_order_list.vue')
     },
     {
+        path: '/familyCart',
+        name: 'familyCart',
+        component: () => import('@/views/order/user_order/familyCart.vue')
+    },
+    {
         path: '/user_order_details_list',
         name: 'user_order_details_list',
         component: () => import('@/views/order/user_order/user_order_details_list.vue')
