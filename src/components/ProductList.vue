@@ -57,7 +57,7 @@ export default {
       this.loading = true;
 
       try {
-        const response = await axios.get("http://localhost:8081/api/test");
+        const response = await axios.get("http://localhost:8081/api/ProductRecomment/List", {withCredentials: true});
 
         // 提取需要的字段
         const newItems = response.data.map(item => ({

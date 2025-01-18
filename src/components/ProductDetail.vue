@@ -50,8 +50,22 @@ export default {
   created() {
     // 从路由参数获取商品 ID
     this.productId = this.$route.params.id;
+    this.addhistory();
   },
   methods: {
+    addhistory() {
+      axios.post("http://localhost:8081/api/ProductRecomment/addhis", {product_id: this.productId},{withCredentials: true})
+          .then(response => {
+            // 假设返回成功时的反馈
+            response;
+            this.$message.success("已成功加入历史记录！");
+          })
+          .catch(error => {
+            // 失败时的反馈
+            console.error('加入历史记录失败，请稍后再试。', error);
+            this.$message.error("加入历史记录失败，请稍后再试。");
+          })
+    },
     goBack() {
       this.$router.push({ name: "MallHomePage" }); // 跳转回首页
     },
