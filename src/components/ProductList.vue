@@ -23,6 +23,16 @@
       <el-spinner />
       <p>加载中...</p>
     </div>
+
+    <!-- 订单列表 -->
+    <div v-if="orders.length > 0" style="margin-top: 50px;">
+      <h2>您的订单</h2>
+      <el-table :data="orders" style="width: 100%">
+        <el-table-column prop="id" label="订单 ID" width="180"></el-table-column>
+        <el-table-column prop="item" label="商品" width="180"></el-table-column>
+        <el-table-column prop="quantity" label="数量" width="180"></el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -32,25 +42,42 @@ import axios from "axios";
 export default {
   data() {
     return {
-      items: [], // 商品列表数据
+      items: [], // 商品列表
       loading: false, // 加载状态
       hasMore: true, // 是否还有更多数据
       currentPage: 1, // 当前页码
       pageSize: 8, // 每页商品数量
+      orders: [], // 订单列表
     };
   },
   mounted() {
-    this.loadMore(); // 加载初始数据
+    this.loadMore(); // 加载初始商品数据
+    this.loadOrders(); // 加载订单数据
     window.addEventListener("scroll", this.handleScroll); // 监听滚动事件
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.handleScroll); // 移除滚动事件监听
   },
   methods: {
+    // 点击商品跳转到商品详情页面
     goToProductDetail(id) {
-
-      this.$router.push({ name: "ProductDetail", params: { id } });
+      // 发送 POST 请求记录用户访问，自动携带 cookie 信息
+      axios
+          .post(
+              "http://localhost:8081/api/user/user_browsomg_history",
+              { product_id: id },
+              { withCredentials: true } // 发送请求时携带 cookie
+          )
+          .then(() => {
+            this.$router.push({ name: "ProductDetail", params: { id } });
+          })
+          .catch((error) => {
+            console.error("记录访问失败：", error);
+            this.$router.push({ name: "ProductDetail", params: { id } });
+          });
     },
+
+    // 加载商品数据
     async loadMore() {
       if (this.loading || !this.hasMore) return;
 
@@ -60,11 +87,11 @@ export default {
         const response = await axios.get("http://localhost:8081/api/ProductRecomment/List", {withCredentials: true});
 
         // 提取需要的字段
-        const newItems = response.data.map(item => ({
-          id:item.id,
+        const newItems = response.data.map((item) => ({
+          id: item.id,
           name: item.name,
           price: item.price,
-          img_url: 'http://localhost:8081/api/product_images/file/'+item.img_url,
+          img_url: "http://localhost:8081/api/product_images/file/" + item.img_url,
         }));
 
         this.items.push(...newItems);
@@ -80,6 +107,8 @@ export default {
         this.loading = false;
       }
     },
+
+    // 处理滚动事件加载更多数据
     handleScroll() {
       const scrollTop =
           document.documentElement.scrollTop || document.body.scrollTop;
@@ -91,16 +120,18 @@ export default {
         this.loadMore();
       }
     },
+
   },
 };
 </script>
 
-<style>
+<style scoped>
 /* 样式优化 */
 .el-card {
   height: 350px;
 }
 </style>
+
 
 
 
